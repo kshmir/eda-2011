@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 import pd.cells.Cell;
 import pd.cells.StartCell;
+import pd.utils.Movement;
 import pd.utils.Point;
 
 public class PDMatrix {
@@ -30,7 +31,13 @@ public class PDMatrix {
 	public Cell[] siblings (Point p){
 		Cell[] sibs = new Cell[4];
 
-		return null;
+		Movement e = Movement.UP;
+		for (int i = 0 ;i>4;i++){
+			sibs[i]=get(p.translate(e.Versor()));
+			e=Movement.convertTo(i+1);
+		}
+		return sibs;
+
 	}
 
 	public Cell get (Point p){
