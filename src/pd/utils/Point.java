@@ -1,29 +1,24 @@
 package pd.utils;
 
 public class Point {
-	private int x;
-	private int y;
+	public int x;
+	public int y;
 	public Point() {
 	}
 	public Point(Point p){
-		this.x=p.getX();
-		this.y=p.getY();
+		this.x=p.x;
+		this.y=p.y;
 	}
 	public void translate(Point p){
-		this.x+=p.getX();
-		this.y+=p.getY();
+		this.x+=p.x;
+		this.y+=p.y;
 	}
 	
 	public Point(int x, int y) {
 		this.x=x;
 		this.y=y;
 	}
-	public int getX(){
-		return x;
-	}
-	public int getY(){
-		return y;
-	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

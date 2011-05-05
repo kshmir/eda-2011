@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.TreeMap;
 
 import pd.cells.Cell;
+import pd.cells.StartCell;
 import pd.utils.Point;
 
 public class PDMatrix {
@@ -28,33 +29,33 @@ public class PDMatrix {
 	
 	public Cell[] siblings (Point p){
 		Cell[] sibs = new Cell[4];
-							
+
 		return null;
 	}
 
 	public Cell get (Point p){
-		return  cells[p.getX()][p.getY()];
+		return  cells[p.x][p.y];
 	}
 
 	public void remove (Point p){
-		cells[p.getX()][p.getY()]=null;
+		cells[p.x][p.y]=null;
 	}
 	
 	public boolean add (Point p, Cell cell){
 		if (get(p)!=null){
 			return false;
 		}
-		cells[p.getX()][p.getY()]=cell;
+		cells[p.x][p.y]=cell;
 		return true;
 	}
 
 	public void putWall(int i, int j) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void setStart(int i, int j) {
-		// TODO Auto-generated method stub
+		//cells[i][j]=new StartCell() 
 		
 	}
 
