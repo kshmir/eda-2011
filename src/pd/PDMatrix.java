@@ -26,18 +26,18 @@ public class PDMatrix {
 	}
 
 	public Cell get (Point p){
-		return  cells[p.getX()][p.getY()];
+		return  cells[p.x][p.y];
 	}
 
 	public void remove (Point p){
-		cells[p.getX()][p.getY()]=null;
+		cells[p.x][p.y]=null;
 	}
 	
 	public boolean add (Point p, Cell cell){
 		if (get(p)!=null){
 			return false;
 		}
-		cells[p.getX()][p.getY()]=cell;
+		cells[p.x][p.y]=cell;
 		return true;
 	}
 
