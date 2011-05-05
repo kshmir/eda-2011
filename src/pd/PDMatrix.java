@@ -1,12 +1,14 @@
 package pd;
 
+import java.util.Comparator;
+import java.util.TreeMap;
+
 import pd.cells.Cell;
 import pd.utils.Point;
-import pd.utils.Movement;
 
 public class PDMatrix {
 
-
+	private TreeMap<Class<? extends Cell>,Integer> availableBlocks; 
 	private Cell[][] cells;
 	private int rows;
 	private int cols;
@@ -15,6 +17,13 @@ public class PDMatrix {
 		rows=_rows;
 		cols=_cols;
 		cells = new Cell[rows][cols];
+		availableBlocks = new TreeMap<Class<? extends Cell>, Integer>(new Comparator<Class<? extends Cell>>() {
+			@Override
+			public int compare(Class<? extends Cell> o1,
+					Class<? extends Cell> o2) {
+				return o1.hashCode() - o2.hashCode();
+			}
+		});
 	}
 	
 	public Cell[] siblings (Point p){
