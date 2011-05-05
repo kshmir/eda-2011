@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Map;
 
 import pd.cells.Cell;
 import pd.cells.CrossCell;
@@ -45,12 +46,12 @@ public class PDParser {
 			for (int j = 0; j < line.length(); j++) {
 				char c = line.charAt(j);
 				
-				if (startSet && c == 'N')
+				if (startSet && (c == 'N' || c == 'S' || c == 'E' || c == 'W'))
 					throw new InvalidFileException();
 				else if (c == '#')
 					matriz.putWall(i,j);
-				else if (c == 'N') 	{
-					matriz.setStart(i,j);
+				else if (c == 'N' || c == 'S' || c == 'E' || c == 'W') 	{
+					matriz.setStart(i,j,c);
 					startSet = true;
 				}
 			}
@@ -62,18 +63,18 @@ public class PDParser {
 			LeftDownCell.class, UpDownCell.class, LeftRightCell.class, CrossCell.class
 		};
 		
-		for (Class<? extends Cell> class : cells) {
+		Map<Class<? extends Cell>, Integer> cellmap = matriz.getAvailableBlocks();
+		for (Class<? extends Cell> celltype : cells) {
 			try
 			{
 				int n = Integer.parseInt(reader.readLine());
+				cellmap.put(celltype, n);
 			}
 			catch (Exception e)
 			{
 				throw new InvalidFileException();
 			}
 		}
-		
-		
 		return matriz;
 	}
 }
