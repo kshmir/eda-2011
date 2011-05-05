@@ -35,7 +35,7 @@ public enum Movement {
 		Point ApplyTo(Point origin)
 		{
 			Point point = new Point(origin);
-			point.translate(new Point(p.getX(),p.getY()));
+			point.translate(new Point(p.x,p.y));
 			return point;
 		}
 		
