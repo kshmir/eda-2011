@@ -28,6 +28,10 @@ public class PDParser {
 			try {
 				rows = Integer.parseInt(line.split(",")[0]);
 				cols = Integer.parseInt(line.split(",")[1]);
+				
+				if (rows <= 0 || cols <= 0)
+					throw new NumberFormatException();
+				
 			}
 			catch(NumberFormatException e) {
 				throw new InvalidFileException();
