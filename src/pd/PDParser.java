@@ -24,11 +24,14 @@ public class PDParser {
 		int rows = 0, cols = 0;
 		
 		String line = null;
-		if ((line = reader.readLine()).matches("[0-9]+,[0-9]+"))  {
+		
+		if ((line = reader.readLine()).split(",").length == 2)  {
 			try {
-				rows = Integer.parseInt(line.split(",")[0]);
-				cols = Integer.parseInt(line.split(",")[1]);
 				
+				
+				rows = Integer.parseInt(line.split(",")[0].trim());
+				cols = Integer.parseInt(line.split(",")[1].trim());
+						
 				if (rows <= 0 || cols <= 0)
 					throw new NumberFormatException();
 				
@@ -40,12 +43,14 @@ public class PDParser {
 		else
 			throw new InvalidFileException();
 		
+		
 		PDMatrix matriz = new PDMatrix(rows, cols);
 		boolean startSet = false;
 		
 		for (int i = 0; i < rows; i++) {
-			line = reader.readLine();
-			if (line.length() >= cols)
+			line = reader.readLine().trim();
+			
+			if (line.length() > cols)
 				throw new InvalidFileException();
 			for (int j = 0; j < line.length(); j++) {
 				char c = line.charAt(j);
@@ -62,7 +67,7 @@ public class PDParser {
 		}
 		
 		@SuppressWarnings("unchecked")
-		Class<? extends Cell>[] cells = (Class<? extends Cell>[]) new Object[] { 
+		Class<? extends Cell>[] cells = (Class<? extends Cell>[]) new Class[] { 
 			LeftUpCell.class, RightUpCell.class, RightDownCell.class,
 			LeftDownCell.class, UpDownCell.class, LeftRightCell.class, CrossCell.class
 		};
@@ -71,7 +76,7 @@ public class PDParser {
 		for (Class<? extends Cell> celltype : cells) {
 			try
 			{
-				int n = Integer.parseInt(reader.readLine());
+				int n = Integer.parseInt(reader.readLine().trim());
 				cellmap.put(celltype, n);
 			}
 			catch (Exception e)

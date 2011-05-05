@@ -12,12 +12,8 @@ public class PDSolverApp {
 	public static void main(String[] args)
 	{
 		try {
-			for (String string : args) {
-				System.out.println(string);
-			}
 			validate(args);
 			PDMatrix mat = PDParser.buildFromFile(args[FILE_NAME_INDEX]);
-			
 		}
 		catch (InvalidParamsException e) {
 			System.out.println("Invalid Params!");
