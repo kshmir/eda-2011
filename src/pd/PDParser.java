@@ -41,8 +41,6 @@ public class PDParser {
 					matriz.setStart(i,j);
 				}
 			}
-			
-			
 		}
 		
 		
