@@ -1,21 +1,41 @@
 package pd;
 
+import pd.cells.Cell;
+import pd.utils.Point;
+
 public class PDMatrix {
+
+
+	private Cell[][] cells;
+	private int rows;
+	private int cols;
 	
-	public void siblings (int x, int y){
-		
+	public PDMatrix (int _rows, int _cols){
+		rows=_rows;
+		cols=_cols;
+		cells = new Cell[rows][cols];
+	}
+	
+	public Cell[] siblings (Point p){
+		Cell[] sibs = new Cell[4];
+							
+		return null;
 	}
 
-	public void get (int x, int y){
-		
+	public Cell get (Point p){
+		return  cells[p.getX()][p.getY()];
 	}
 
-	public void remove (int x, int y){
-		
+	public void remove (Point p){
+		cells[p.getX()][p.getY()]=null;
 	}
 	
-	public void add (int x, int y){
-		
+	public boolean add (Point p, Cell cell){
+		if (get(p)!=null){
+			return false;
+		}
+		cells[p.getX()][p.getY()]=cell;
+		return true;
 	}
 
 }

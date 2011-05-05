@@ -1,7 +1,5 @@
 package pd.utils;
 
-import java.awt.Point;
-
 public enum Movement {
 		UP(0,-1), DOWN(0,1), LEFT(-1,0), RIGHT(1,0), NONE(0,0);
 		
@@ -37,7 +35,7 @@ public enum Movement {
 		Point ApplyTo(Point origin)
 		{
 			Point point = new Point(origin);
-			point.translate(p.x,p.y);
+			point.translate(new Point(p.getX(),p.getY()));
 			return point;
 		}
 		
