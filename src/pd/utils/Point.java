@@ -9,9 +9,9 @@ public class Point {
 		this.x=p.x;
 		this.y=p.y;
 	}
-	public void translate(Point p){
-		this.x+=p.x;
-		this.y+=p.y;
+
+	public Point translate(Point p){
+		return new Point(x+p.x, y+p.y);
 	}
 	
 	public Point(int x, int y) {
