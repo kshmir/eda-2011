@@ -2,15 +2,15 @@ package pd.cells;
 
 import pd.utils.Point;
 
-public class SouthStartCell extends StartCell {
-	public SouthStartCell(Point p) {
+public class UpStartCell extends StartCell {
+	public UpStartCell(Point p) {
 		super(p);
 	}
 
 	@Override
 	public Point nextPoint(Point p) {
 		if (p.equals(super.position))
-			return new Point(super.position.getX(), super.position.getY() + 1);
+			return new Point(super.position.x, super.position.y - 1);
 		return null;
 	}
 

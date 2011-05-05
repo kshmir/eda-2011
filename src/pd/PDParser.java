@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import pd.cells.Cell;
+
 public class PDParser {
 	public static PDMatrix buildFromFile(String string) throws IOException, InvalidFileException
 	{
@@ -35,18 +37,25 @@ public class PDParser {
 				throw new InvalidFileException();
 			for (int j = 0; j < line.length(); j++) {
 				char c = line.charAt(j);
-				if (c == '#')
+				
+				if (startSet && c == 'N')
+					throw new InvalidFileException();
+				else if (c == '#')
 					matriz.putWall(i,j);
 				else if (c == 'N') 	{
 					matriz.setStart(i,j);
+					startSet = true;
 				}
 			}
-			
-			
 		}
 		
+		Class<? extends Cell>[] cells = new Class<? extends Cell>[] { 
+				
+		};
+		}
+
 		
 		
-		return null;
+		return matriz;
 	}
 }
