@@ -2,6 +2,7 @@ package pd;
 
 import pd.cells.Cell;
 import pd.utils.Point;
+import pd.utils.Movement;
 
 public class PDMatrix {
 
@@ -38,6 +39,16 @@ public class PDMatrix {
 		}
 		cells[p.getX()][p.getY()]=cell;
 		return true;
+	}
+
+	public void putWall(int i, int j) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setStart(int i, int j) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
