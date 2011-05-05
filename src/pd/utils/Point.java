@@ -9,9 +9,9 @@ public class Point {
 		this.x=p.getX();
 		this.y=p.getY();
 	}
-	public void translate(Point p){
-		this.x+=p.getX();
-		this.y+=p.getY();
+	public Point translate(Point p){
+		return new Point(x+p.x, y+p.y);
+
 	}
 	
 	public Point(int x, int y) {

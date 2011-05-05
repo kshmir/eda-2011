@@ -22,7 +22,7 @@ public enum Movement {
 		 * Represents a Point which is equivalent to the Movement Enum given.
 		 * @return The versor.
 		 */
-		Point Versor()
+		public Point Versor()
 		{
 			return ApplyTo(new Point());
 		}
