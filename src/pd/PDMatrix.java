@@ -8,6 +8,7 @@ import pd.cells.DownStartCell;
 import pd.cells.LeftStartCell;
 import pd.cells.RightStartCell;
 import pd.cells.UpStartCell;
+import pd.cells.WallCell;
 import pd.utils.Movement;
 import pd.utils.Point;
 
@@ -61,7 +62,7 @@ public class PDMatrix {
 
 	public void putWall(int i, int j) {
 		
-		
+		cells[i][j]=new WallCell(new Point(i,j));
 	}
 
 	public void setStart(int i, int j, char ch) {
