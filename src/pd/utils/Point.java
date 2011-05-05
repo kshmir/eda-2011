@@ -9,15 +9,9 @@ public class Point {
 		this.x=p.x;
 		this.y=p.y;
 	}
-<<<<<<< HEAD
+
 	public Point translate(Point p){
 		return new Point(x+p.x, y+p.y);
-
-=======
-	public void translate(Point p){
-		this.x+=p.x;
-		this.y+=p.y;
->>>>>>> 51b1b4d0de8b87e27e0cb8d8f1397f82480c796d
 	}
 	
 	public Point(int x, int y) {

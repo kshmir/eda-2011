@@ -33,7 +33,7 @@ public class PDMatrix {
 
 		Movement e = Movement.UP;
 		for (int i = 0 ;i>4;i++){
-			sibs[i]=get(p.translate(e.Versor()));
+			sibs[i]=get(p.translate(e.versor()));
 			e=Movement.convertTo(i+1);
 		}
 		return sibs;
