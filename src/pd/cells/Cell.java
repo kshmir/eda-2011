@@ -7,8 +7,8 @@ public abstract class Cell {
 	public Cell(Point p) {
 		position = p;
 	}
-	// Las coordena das crecen hacia abajo y hacia la izquierda
-	public abstract  Point nextPoint(Point p);
+	
+	public abstract Point nextPoint(Point p);
 	
 	public Point nextPoint(int x, int y){
 		return nextPoint(new Point(x,y));

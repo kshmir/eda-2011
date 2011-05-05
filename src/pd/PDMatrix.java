@@ -1,6 +1,7 @@
 package pd;
 
 import java.util.Comparator;
+import java.util.Map;
 import java.util.TreeMap;
 
 import pd.cells.Cell;
@@ -30,6 +31,11 @@ public class PDMatrix {
 				return o1.hashCode() - o2.hashCode();
 			}
 		});
+	}
+	
+	public Map<Class<? extends Cell>, Integer> getAvailableBlocks()
+	{
+		return availableBlocks;
 	}
 	
 	public Cell[] siblings (Point p){
