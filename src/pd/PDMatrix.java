@@ -39,8 +39,10 @@ public class PDMatrix {
 	}
 	
 	public Cell[] siblings (Point p){
+		if (p==null || p.x>=cols || p.y>=rows)
+			return null;
+		
 		Cell[] sibs = new Cell[4];
-
 		Movement e = Movement.UP;
 		for (int i = 0 ;i>4;i++){
 			sibs[i]=get(p.translate(e.versor()));
@@ -51,14 +53,20 @@ public class PDMatrix {
 	}
 
 	public Cell get (Point p){
+		if (p==null || p.x>=cols || p.y>=rows)
+			return null;
+		
 		return  cells[p.x][p.y];
 	}
 
 	public void remove (Point p){
-		cells[p.x][p.y]=null;
+		if (p!=null && p.x<cols && p.y<rows)
+			cells[p.x][p.y]=null;
 	}
 	
 	public boolean add (Point p, Cell cell){
+		if (cell==null || p==null)
+			return false;
 		if (get(p)!=null){
 			return false;
 		}
@@ -67,25 +75,26 @@ public class PDMatrix {
 	}
 
 	public void putWall(int i, int j) {
-		
-		cells[i][j]=new WallCell(new Point(i,j));
+		if (i<cols && j<rows)
+			cells[i][j]=new WallCell(new Point(i,j));
 	}
 
 	public void setStart(int i, int j, char ch) {
-		Movement e = Movement.convertTo(new Integer(ch));
-		Cell c;
-		if(e==Movement.UP)
-			c = new UpStartCell(new Point(i,j));
-		if(e==Movement.DOWN)
-			c = new DownStartCell(new Point(i,j));
-		if(e==Movement.LEFT)
-			c = new LeftStartCell(new Point(i,j));
-		if(e==Movement.RIGHT)
-			c = new RightStartCell(new Point(i,j));
-		else
-			c=null;
-		cells[i][j]=c;  
-		
+		if (i<cols && j<rows){
+			Movement e = Movement.convertTo(new Integer(ch));
+			Cell c;
+			if(e==Movement.UP)
+				c = new UpStartCell(new Point(i,j));
+			if(e==Movement.DOWN)
+				c = new DownStartCell(new Point(i,j));
+			if(e==Movement.LEFT)
+				c = new LeftStartCell(new Point(i,j));
+			if(e==Movement.RIGHT)
+				c = new RightStartCell(new Point(i,j));
+			else
+				c=null;
+			cells[i][j]=c;  
+		}
 	}
-
+	
 }
