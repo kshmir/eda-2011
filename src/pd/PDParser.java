@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import pd.cells.Cell;
+import pd.cells.LeftUpCell;
+import pd.cells.RightDownCell;
+import pd.cells.RightUpCell;
 
 public class PDParser {
 	public static PDMatrix buildFromFile(String string) throws IOException, InvalidFileException
@@ -49,10 +52,12 @@ public class PDParser {
 			}
 		}
 		
-		Class<? extends Cell>[] cells = new Class<? extends Cell>[] { 
-				
+		@SuppressWarnings("unchecked")
+		Class<? extends Cell>[] cells = (Class<? extends Cell>[]) new Object[] { 
+			LeftUpCell.class, RightUpCell.class, RightDownCell.class,
+			LeftDownCell.class, UpDownCell.class, RightDownCell.class,
 		};
-		}
+		
 
 		
 		
