@@ -5,6 +5,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import pd.cells.Cell;
+import pd.cells.DownStartCell;
+import pd.cells.LeftStartCell;
+import pd.cells.RightStartCell;
+import pd.cells.UpStartCell;
+import pd.cells.WallCell;
 import pd.utils.Movement;
 import pd.utils.Point;
 
@@ -63,11 +68,23 @@ public class PDMatrix {
 
 	public void putWall(int i, int j) {
 		
-		
+		cells[i][j]=new WallCell(new Point(i,j));
 	}
 
-	public void setStart(int i, int j) {
-		//cells[i][j]=new StartCell() 
+	public void setStart(int i, int j, char ch) {
+		Movement e = Movement.convertTo(new Integer(ch));
+		Cell c;
+		if(e==Movement.UP)
+			c = new UpStartCell(new Point(i,j));
+		if(e==Movement.DOWN)
+			c = new DownStartCell(new Point(i,j));
+		if(e==Movement.LEFT)
+			c = new LeftStartCell(new Point(i,j));
+		if(e==Movement.RIGHT)
+			c = new RightStartCell(new Point(i,j));
+		else
+			c=null;
+		cells[i][j]=c;  
 		
 	}
 
