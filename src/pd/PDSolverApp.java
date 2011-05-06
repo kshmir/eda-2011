@@ -3,6 +3,7 @@ package pd;
 import java.io.IOException;
 import java.util.Stack;
 
+import pd.solvers.PDSolver;
 import pd.utils.Cell;
 import pd.utils.Movement;
 import pd.utils.Point;
@@ -10,6 +11,7 @@ import pd.utils.Point;
 public class PDSolverApp {
 	private static final int EXACT_PARAMS_SIZE = 2;
 	private static final int APPROX_PARAMS_SIZE = 3;
+	private static final int PARAM_INDEX = 2;
 	private static final int ACTION_INDEX = 1;
 	private static final int FILE_NAME_INDEX = 0;
 	
@@ -19,9 +21,13 @@ public class PDSolverApp {
 		try {
 			validate(args);
 			PDMatrix mat = PDParser.buildFromFile(args[FILE_NAME_INDEX]);
-			Stack<Cell> cells = PDSolver.Solve(mat, "exact");
-			System.out.println("Tama–o: " + (cells.size() - 1));
+			Stack<Cell> cells = PDSolver.Solve(mat, args[ACTION_INDEX], (args.length == APPROX_PARAMS_SIZE) ? Integer.parseInt(args[PARAM_INDEX]) : null);
+			System.out.println("Tama–o: " + (cells.size()));
 			print(cells,mat);
+		}
+		catch (NumberFormatException e)
+		{
+			System.out.println("Invalid Params!");
 		}
 		catch (InvalidParamsException e) {
 			System.out.println("Invalid Params!");
@@ -30,6 +36,10 @@ public class PDSolverApp {
 			System.out.println("Couldn't read input file!");
 		} catch (InvalidFileException e) {
 			System.out.println("Invalid file detected!");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 	

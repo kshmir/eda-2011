@@ -12,6 +12,7 @@ public class PDMatrix {
 	private int rows;
 	private int cols;
 
+	public int availablePoints = 0;
 	
 	private CellCountMap map;
 	private Point startPoint;
@@ -25,6 +26,7 @@ public class PDMatrix {
 				cells[i][j] = Cell.EMPTY;
 			}
 		}
+		availablePoints = rows * cols;
 		map = new CellCountMap();
 	}
 	
@@ -40,16 +42,15 @@ public class PDMatrix {
 		
 		Cell[] sibs = new Cell[4];
 		Movement e = Movement.UP;
-		for (int i = 0 ;i>4;i++){
+		for (int i = 0 ;i<4;i++){
 			sibs[i]=get(p.translate(e.versor()));
 			e=Movement.convertTo(i+1);
 		}
 		return sibs;
-
 	}
 
 	public Cell get (Point p){
-		if (p==null || p.x>=cols || p.y>=rows)
+		if (p==null || p.x>=cols || p.y>=rows || p.x < 0 || p.y < 0)
 			return null;
 		
 		return  cells[p.x][p.y];
@@ -57,17 +58,25 @@ public class PDMatrix {
 
 	public void remove (Point p){
 		if (p!=null && p.x<cols && p.y<rows)
+		{
 			cells[p.x][p.y]=Cell.EMPTY;
+			availablePoints++;
+		}
+		
 	}
 	
 	public boolean add (Point p, Cell cell){
 		cells[p.x][p.y]=cell;
+		availablePoints += (cell == Cell.EMPTY) ? 1 : -1;
 		return true;
 	}
 
 	public void putWall(int x, int y) {
 		if (x<cols && y<rows)
+		{
 			cells[x][y]= Cell.WALL;
+			availablePoints--;
+		}
 	}
 
 	
@@ -95,6 +104,7 @@ public class PDMatrix {
 		}
 		startPoint =new Point(x,y);
 		cells[x][y]	= Cell.START;
+		availablePoints--;
 	}
 	
 	public void print()

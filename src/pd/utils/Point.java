@@ -3,6 +3,7 @@ package pd.utils;
 public class Point {
 	public int x;
 	public int y;
+	
 	public Point() {
 	}
 	public Point(Point p){
