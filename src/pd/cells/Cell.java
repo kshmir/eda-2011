@@ -8,10 +8,7 @@ public abstract class Cell {
 		position = p;
 	}
 
-	
-	
-	public static int getClassID()
-	{
+	public static int getClassID()	{
 		return -1;
 	}
 	

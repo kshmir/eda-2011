@@ -12,10 +12,8 @@ public class PDSolver {
 	
 	private static void exactSolver(PDMatrix mat, Point p, Cell currentCell)
 	{
-		Class<? extends Cell>[] classes = mat.getCellTypes();
-		for (int i = 0; i < classes.length; i++) {
-			Class<? extends Cell> cl = classes[i];
-			CellCountMap cc = mat.getCellCount();
+		for (int i = 0; i < 7; i++) {
+			CellCountMap cc = mat.getCellCountMap();
 			if (cc.totalPiecesLeft(i) > 0)
 			{
 				cc.decreasePiecesLeft(i);
