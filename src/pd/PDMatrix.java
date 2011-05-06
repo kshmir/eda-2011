@@ -52,22 +52,22 @@ public class PDMatrix {
 		if (p==null || p.x>=cols || p.y>=rows)
 			return null;
 		
-		return  cells[p.y][p.x];
+		return  cells[p.x][p.y];
 	}
 
 	public void remove (Point p){
 		if (p!=null && p.x<cols && p.y<rows)
-			cells[p.y][p.x]=Cell.EMPTY;
+			cells[p.x][p.y]=Cell.EMPTY;
 	}
 	
 	public boolean add (Point p, Cell cell){
-		cells[p.y][p.x]=cell;
+		cells[p.x][p.y]=cell;
 		return true;
 	}
 
 	public void putWall(int x, int y) {
 		if (x<cols && y<rows)
-			cells[y][x]= Cell.WALL;
+			cells[x][y]= Cell.WALL;
 	}
 
 	
@@ -77,7 +77,7 @@ public class PDMatrix {
 	}
 
 	
-	public void setStart(int i, int j, char ch) {
+	public void setStart(int x, int y, char ch) {
 		switch(ch)
 		{
 			case 'N':
@@ -93,15 +93,50 @@ public class PDMatrix {
 				Cell.setStart(Movement.LEFT);
 				break;
 		}
-		startPoint =new Point(i,j);
-		cells[i][j]	= Cell.START;
+		startPoint =new Point(x,y);
+		cells[x][y]	= Cell.START;
 	}
 	
 	public void print()
 	{
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				System.out.print(cells[cols -j - 1][i].ordinal());
+				switch(cells[j][i]) {
+					case CROSS:
+						System.out.print("┼");
+						break;
+					case UPDOWN:
+						System.out.print("│");
+						break;
+					case LEFTRIGHT:
+						System.out.print("─");
+						break;
+					case LEFTUP:
+						System.out.print("┘");
+						break;
+					case DOWNLEFT:
+						System.out.print("┐");
+						break;
+					case RIGHTDOWN:
+						System.out.print("┌");
+						break;
+					case UPRIGHT:
+						System.out.print("└");
+						break;
+					case START:
+						System.out.print("*");
+						break;
+					case WALL:
+						System.out.print("█");
+						break;
+					case EMPTY:
+						System.out.print(" ");
+						break;
+				}
+				
+				
+				
+				
 			}
 			System.out.println();
 		}
