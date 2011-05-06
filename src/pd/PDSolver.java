@@ -32,7 +32,16 @@ public class PDSolver {
 		if (!mat.contains(nextPoint)) {
 			
 			if (bestStack.size() < solutionStack.size())
+			{
+				mat.print();
+				try {
+					System.in.read();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				bestStack = (Stack<Point>) solutionStack.clone();
+			}
 			return;
 		}
 		
@@ -49,13 +58,7 @@ public class PDSolver {
 					solutionStack.push(nextPoint);
 					Movement m = Cell.cells[i].NextDir(currentMovement);
 					mat.add(nextPoint, Cell.cells[i]);
-					mat.print();
-					try {
-						System.in.read();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					
 					exactSolver(mat, nextPoint, m);
 					mat.add(nextPoint, Cell.EMPTY);
 					solutionStack.pop();

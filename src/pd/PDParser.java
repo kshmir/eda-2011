@@ -45,7 +45,7 @@ public class PDParser {
 				if (startSet && (c == 'N' || c == 'S' || c == 'E' || c == 'W'))
 					throw new InvalidFileException();
 				else if (c == '#')
-					matriz.putWall(i,j);
+					matriz.putWall(cols - j - 1, rows - i - 1);
 				else if (c == 'N' || c == 'S' || c == 'E' || c == 'W') 	{
 					matriz.setStart(i,j,c);
 					startSet = true;
