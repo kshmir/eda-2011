@@ -1,6 +1,11 @@
 package pd;
 
 
+import pd.utils.Cell;
+import pd.utils.Movement;
+import pd.utils.Point;
+
+
 public class PDMatrix {
  
 	private Cell[][] cells;
@@ -15,6 +20,11 @@ public class PDMatrix {
 		rows=_rows;
 		cols=_cols;
 		cells = new Cell[rows][cols];
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				cells[i][j] = Cell.EMPTY;
+			}
+		}
 		map = new CellCountMap();
 	}
 	
@@ -42,12 +52,12 @@ public class PDMatrix {
 		if (p==null || p.x>=cols || p.y>=rows)
 			return null;
 		
-		return  cells[p.x][p.y];
+		return  cells[p.y][p.x];
 	}
 
 	public void remove (Point p){
 		if (p!=null && p.x<cols && p.y<rows)
-			cells[p.x][p.y]=null;
+			cells[p.y][p.x]=null;
 	}
 	
 	public boolean add (Point p, Cell cell){
@@ -56,13 +66,13 @@ public class PDMatrix {
 		if (get(p)!=null){
 			return false;
 		}
-		cells[p.x][p.y]=cell;
+		cells[p.y][p.x]=cell;
 		return true;
 	}
 
-	public void putWall(int i, int j) {
-		if (i<cols && j<rows)
-			cells[i][j]=new WallCell(new Point(i,j));
+	public void putWall(int x, int y) {
+		if (x<cols && y<rows)
+			cells[y][x]= Cell.WALL;
 	}
 
 	
@@ -71,38 +81,35 @@ public class PDMatrix {
 		return startPoint;
 	}
 	
-	public Cell getStartCell()
-	{
-		return get(get(startPoint).nextPoint(startPoint));
-	}
+	
 	
 	
 	
 	public void setStart(int i, int j, char ch) {
-		if (i<cols && j<rows){
-			Movement e = Movement.convertTo(new Integer(ch));
-			Cell c;
-			if(e == Movement.UP)
-				c = new UpStartCell(new Point(i,j));
-			if(e == Movement.DOWN)
-				c = new DownStartCell(new Point(i,j));
-			if(e == Movement.LEFT)
-				c = new LeftStartCell(new Point(i,j));
-			if(e == Movement.RIGHT)
-				c = new RightStartCell(new Point(i,j));
-			else
-				c=null;
-			startPoint = new Point(i,j);
-			cells[i][j]=c;  
+		switch(ch)
+		{
+			case 'N':
+				cells[i][j]	
+				break;
+			case 'S':
+				
+				break;
+			case 'E':
+				
+				break;
+			case 'W':
+				
+				break;
 		}
 	}
 	
 	public void print()
 	{
-		for (int i = 0; i < cols; i++) {
-			for (int j = 0; j < rows; j++) {
-				System.out.print(cells[i][j].)
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				System.out.print(cells[cols -j - 1][i].ordinal());
 			}
+			System.out.println();
 		}
 	}
 	
