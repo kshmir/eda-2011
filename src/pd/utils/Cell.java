@@ -36,8 +36,9 @@ public enum Cell {
 	}
 	public Movement NextDir(Movement e){
 		if (direction.length<=1){
-			return 
+			return direction[0]; 
 		}
+		
 		return null;
 	}
 	
