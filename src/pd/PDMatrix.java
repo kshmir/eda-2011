@@ -30,6 +30,10 @@ public class PDMatrix {
 	}
 	
 	
+	public CellCountMap getCellCount()
+	{
+		return map;
+	}
 	
 	public Cell[] siblings (Point p){
 		if (p==null || p.x>=cols || p.y>=rows)
