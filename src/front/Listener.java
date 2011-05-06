@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import pd.PDMatrix;
 import pd.utils.Cell;
+import pd.utils.Movement;
 import pd.utils.Point;
 
 public class Listener implements EventListener {
@@ -59,23 +60,24 @@ public class Listener implements EventListener {
 				case RIGHTDOWN:
 					cell.rightDownCell(i, j);
 					break;
+				case START:
+					cell.startCell(i, j, Cell.startDirection);
+					break;
+				case UPDOWN:
+					cell.upDownCell(i, j);
+					break;
+				case UPRIGHT:
+					cell.upRightCell(i, j);
+					break;
+				case WALL:
+					cell.wallCell(i, j);
+					break;
 				}
 			}
-		//cell.crossRectangle(2, 2);
-		//cell.downLeftRectangle(1, 1);
-		cell.leftRightCell(3, 3);
-		cell.leftUpCell(3, 3);
-		cell.emptyCell(2, 2);
-		cell.upDownCell(2, 5);
-		cell.upRightCell(2, 6);
-		cell.downLeftCell(6, 6);
-		cell.leftRightCell(5, 6);
-		cell.wallCell(7, 6);
-		//cell.startCell(8, 3, 3);
 
 		frame.setContentPane(cell);
 		frame.repaint();
-		//cell.crossRectangle(3, 8);
+		cell.crossCell(3, 8);
 
 	}
 
