@@ -22,6 +22,7 @@ public class PDSolver {
 	@SuppressWarnings("unchecked")
 	private static void exactSolver(PDMatrix mat, Point p, Movement currentMovement)
 	{
+		System.out.println(p);
 		if (currentMovement == Movement.NONE)
 			return;
 		
