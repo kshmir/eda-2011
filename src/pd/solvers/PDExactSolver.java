@@ -53,7 +53,7 @@ public class PDExactSolver {
 	@SuppressWarnings("unchecked")
 	private static void solve(PDMatrix mat, Point p, Movement currentMovement)
 	{
-		if (currentMovement == Movement.NONE)
+		if (currentMovement == Movement.NONE || solved)
 			return;
 		CellCountMap cc = mat.getCellCountMap();
 		Point nextPoint = p;
