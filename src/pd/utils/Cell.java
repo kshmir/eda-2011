@@ -56,12 +56,12 @@ public enum Cell {
 			break;
 
 		case LEFTRIGHT:
-			if (e != Movement.RIGHT || e != Movement.LEFT)
+			if (e != Movement.RIGHT && e != Movement.LEFT)
 				return Movement.NONE;
 			else
 				return e;
 		case UPDOWN:
-			if (e != Movement.UP || e != Movement.DOWN)
+			if (e != Movement.UP && e != Movement.DOWN)
 				return Movement.NONE;
 			else
 				return e;
