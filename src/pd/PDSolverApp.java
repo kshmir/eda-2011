@@ -1,6 +1,11 @@
 package pd;
 
 import java.io.IOException;
+import java.util.Stack;
+
+import pd.utils.Cell;
+import pd.utils.Movement;
+import pd.utils.Point;
 
 public class PDSolverApp {
 	private static final int EXACT_PARAMS_SIZE = 2;
@@ -14,8 +19,8 @@ public class PDSolverApp {
 		try {
 			validate(args);
 			PDMatrix mat = PDParser.buildFromFile(args[FILE_NAME_INDEX]);
-			System.out.println(PDSolver.Solve(mat, "exact").size());
-			
+			Stack<Cell> cells = PDSolver.Solve(mat, "exact");
+			print(cells,mat);
 		}
 		catch (InvalidParamsException e) {
 			System.out.println("Invalid Params!");
@@ -25,6 +30,21 @@ public class PDSolverApp {
 		} catch (InvalidFileException e) {
 			System.out.println("Invalid file detected!");
 		}
+	}
+	
+	public static void print(Stack<Cell> stack, PDMatrix mat)
+	{
+		stack.pop();
+		Movement m = Cell.startDirection;
+		Point p = m.applyTo(mat.getStartPoint());
+		while(!stack.isEmpty())
+		{
+			Cell c = stack.pop();
+			mat.add(p, c);
+			m = c.NextDir(m);
+			p = m.applyTo(p);
+		}
+		mat.print();
 	}
 	
 	public static void validate(String[] args) throws InvalidParamsException
