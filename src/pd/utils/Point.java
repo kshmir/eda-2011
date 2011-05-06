@@ -14,9 +14,7 @@ public class Point {
 		return new Point(x+p.x, y+p.y);
 	}
 	
-	public Point translate(Movement m){
-		return translate(m.versor());
-	}
+	
 	
 	public Point(int x, int y) {
 		this.x=x;
@@ -45,5 +43,11 @@ public class Point {
 		if (y != other.y)
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "{" + x + "," + y +"}";
 	}
 }
