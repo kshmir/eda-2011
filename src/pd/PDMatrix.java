@@ -1,9 +1,5 @@
 package pd;
 
-import java.util.Comparator;
-import java.util.Map;
-import java.util.TreeMap;
-
 import pd.cells.Cell;
 import pd.cells.DownStartCell;
 import pd.cells.LeftStartCell;
@@ -27,16 +23,17 @@ public class PDMatrix {
 		rows=_rows;
 		cols=_cols;
 		cells = new Cell[rows][cols];
+		map = new CellCountMap();
 	}
 	
 	
-	public CellCountMap getCellCount()
+	public CellCountMap getCellCountMap()
 	{
 		return map;
 	}
 	
 	public Cell[] siblings (Point p){
-		if (p==null || p.x>=cols || p.y>=rows)
+		if (p == null || p.x >= cols || p.y >= rows)
 			return null;
 		
 		Cell[] sibs = new Cell[4];
@@ -87,10 +84,7 @@ public class PDMatrix {
 		return get(get(startPoint).nextPoint(startPoint));
 	}
 	
-	public Class<? extends Cell>[] getCellTypes()
-	{
-		return cellClassArray;
-	}
+	
 	
 	public void setStart(int i, int j, char ch) {
 		if (i<cols && j<rows){

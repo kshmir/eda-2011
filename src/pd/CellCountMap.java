@@ -1,21 +1,13 @@
 package pd;
 
-import pd.cells.Cell;
+import pd.utils.Cell;
 
 public class CellCountMap {
-	
-
-	private Cell[] cells;
 	private int[] counts;
 	private int totalCount = 0;
 	
-	
-	public CellCountMap()
-	{
+	public CellCountMap() {
 		counts = new int[7];
-		cells = new Cell[7];
-		
-		// TODO: Initialize cells here.
 	}
 	public int totalPiecesLeft() {
 		return totalCount;
@@ -44,5 +36,4 @@ public class CellCountMap {
 	public void incrementPiecesLeft(int index) {
 		counts[index]++;
 	}
-
 }

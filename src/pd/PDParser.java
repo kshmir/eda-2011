@@ -4,16 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Map;
-
-import pd.cells.Cell;
-import pd.cells.CrossCell;
-import pd.cells.LeftDownCell;
-import pd.cells.LeftRightCell;
-import pd.cells.LeftUpCell;
-import pd.cells.RightDownCell;
-import pd.cells.RightUpCell;
-import pd.cells.UpDownCell;
 
 public class PDParser {
 	public static PDMatrix buildFromFile(String string) throws IOException, InvalidFileException
@@ -27,14 +17,11 @@ public class PDParser {
 		
 		if ((line = reader.readLine()).split(",").length == 2)  {
 			try {
-				
-				
 				rows = Integer.parseInt(line.split(",")[0].trim());
 				cols = Integer.parseInt(line.split(",")[1].trim());
 						
 				if (rows <= 0 || cols <= 0)
 					throw new NumberFormatException();
-				
 			}
 			catch(NumberFormatException e) {
 				throw new InvalidFileException();
@@ -66,11 +53,17 @@ public class PDParser {
 			}
 		}
 		
-		@SuppressWarnings("unchecked")
-		Class<? extends Cell>[] cells = (Class<? extends Cell>[]) new Class[] { 
-			LeftUpCell.class, RightUpCell.class, RightDownCell.class,
-			LeftDownCell.class, UpDownCell.class, LeftRightCell.class, CrossCell.class
-		};
+		CellCountMap map = matriz.getCellCountMap();
+		for (int i = 0; i < 7; i++) {
+			try
+			{
+				map.setTotalPiecesLeft(i, Integer.parseInt(reader.readLine().trim()));
+			}
+			catch (Exception e)
+			{
+				throw new InvalidFileException();
+			}
+		}
 		
 		
 		return matriz;
