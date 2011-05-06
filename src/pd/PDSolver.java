@@ -1,6 +1,7 @@
 package pd;
 
 import pd.cells.Cell;
+import pd.utils.Point;
 
 public class PDSolver {
 	public static void Solve(PDMatrix mat, String method)
@@ -11,5 +12,6 @@ public class PDSolver {
 	
 	private static void exactSolver(PDMatrix mat, Point p, Cell currentCell)
 	{
+		mat.getCellTypes();
 	}
 }

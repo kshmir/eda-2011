@@ -9,7 +9,7 @@ public abstract class Cell {
 	}
 
 	
-	public abstract int getCellID();
+	public abstract static final int getCellID();
 	public abstract Point nextPoint(Point p);
 	
 	public Point nextPoint(int x, int y){
