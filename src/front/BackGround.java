@@ -3,10 +3,6 @@ package front;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -20,7 +16,7 @@ public class BackGround extends JPanel {
 	public BackGround(int r, int c) {
 		rows = r;
 		cols = c;
-		BaseCell.color = this.color;
+		BaseCell.color = color;
 		BaseCell.size = size;
 		cells = new BaseCell[cols][rows];
 		for (int i = 0; i < cols; i++)

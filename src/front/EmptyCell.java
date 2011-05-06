@@ -8,8 +8,7 @@ import java.awt.geom.Rectangle2D;
 public class EmptyCell extends BaseCell{
 	private int x,y;
 	private Rectangle2D.Double back;
-	private Rectangle2D.Double vertical;
-	private Rectangle2D.Double horizontal;
+	
 
 	public EmptyCell(int x, int y) {
 		this.x=x;
