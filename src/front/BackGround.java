@@ -3,12 +3,10 @@ package front;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.JPanel;
+
+import pd.utils.Movement;
 
 public class BackGround extends JPanel {
 	public static int size = 43;
@@ -20,7 +18,7 @@ public class BackGround extends JPanel {
 	public BackGround(int r, int c) {
 		rows = r;
 		cols = c;
-		BaseCell.color = this.color;
+		BaseCell.color = color;
 		BaseCell.size = size;
 		cells = new BaseCell[cols][rows];
 		for (int i = 0; i < cols; i++)
@@ -74,14 +72,9 @@ public class BackGround extends JPanel {
 			cells[x][y] = new EmptyCell(x, y);
 	}
 
-	public void crossRectangle(int x, int y) {
+	public void crossCell(int x, int y) {
 		if (x >= 0 && x < cols && y >= 0 && y < rows)
 			cells[x][y] = new CrossCell(x, y);
-	}
-
-	public void downLeftRectangle(int x, int y) {
-		if (x >= 0 && x < cols && y >= 0 && y < rows)
-			cells[x][y] = new DownLeftCell(x, y);
 	}
 
 	public void wallCell(int x, int y) {
@@ -89,11 +82,16 @@ public class BackGround extends JPanel {
 			cells[x][y] = new WallCell(x, y);
 	}
 
-	public void startCell(int x, int y, int m) {
+	public void startCell(int x, int y, Movement movement) {
 		if (x >= 0 && x < cols && y >= 0 && y < rows)
-			cells[x][y] = new StartCell(x, y, m);
+			cells[x][y] = new StartCell(x, y, movement);
 	}
-
+	
+	public void rightDownCell(int x, int y) {
+		if (x >= 0 && x < cols && y >= 0 && y < rows)
+			cells[x][y] = new RightDownCell(x, y);
+	}
+	
 	public int getCols() {
 		return cols;
 	}
