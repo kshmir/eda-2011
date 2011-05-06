@@ -61,11 +61,6 @@ public class PDMatrix {
 	}
 	
 	public boolean add (Point p, Cell cell){
-		if (cell==null || p==null)
-			return false;
-		if (get(p)!=null){
-			return false;
-		}
 		cells[p.y][p.x]=cell;
 		return true;
 	}

@@ -24,7 +24,7 @@ public enum Movement {
 		 */
 		public Point versor()
 		{
-			return ApplyTo(new Point());
+			return applyTo(new Point());
 		}
 		
 		/**
@@ -32,11 +32,9 @@ public enum Movement {
 		 * @param The Point which needs a movement to be applied on.
 		 * @return The point with the movement applied on it
 		 */
-		Point ApplyTo(Point origin)
+		public Point applyTo(Point origin)
 		{
-			Point point = new Point(origin);
-			point.translate(new Point(p.x,p.y));
-			return point;
+			return origin.translate(new Point(p.x,p.y));
 		}
 		
 		/**

@@ -14,7 +14,7 @@ public class PDSolver {
 		if (method.equals("exact"))
 			exactSolver(mat,
 						mat.getStartPoint(),
-						mat.get(mat.getStartPoint()).NextDir(Cell.startDirection));
+						Cell.startDirection);
 		
 		return bestStack;
 	}	
@@ -22,16 +22,22 @@ public class PDSolver {
 	@SuppressWarnings("unchecked")
 	private static void exactSolver(PDMatrix mat, Point p, Movement currentMovement)
 	{
-		System.out.println(p);
+		
 		if (currentMovement == Movement.NONE)
 			return;
 		
-		Point nextPoint = p.translate(currentMovement);
+		Point nextPoint = currentMovement.applyTo(p);
 		
-		if (!mat.contains(nextPoint) && bestStack.size() < solutionStack.size())
+		if (!mat.contains(nextPoint)) {
+			
+			if (bestStack.size() < solutionStack.size())
 				bestStack = (Stack<Point>) solutionStack.clone();
+			return;
+		}
 		
-		if (mat.get(nextPoint) != Cell.EMPTY && mat.get(nextPoint) != Cell.START)
+		
+		
+		if (mat.get(nextPoint) == Cell.EMPTY && mat.get(nextPoint) != Cell.START)
 		{
 			CellCountMap cc = mat.getCellCountMap();
 			for (int i = 0; i < 7; i++) {
@@ -42,7 +48,10 @@ public class PDSolver {
 					solutionStack.push(nextPoint);
 					Movement m = Cell.cells[i].NextDir(currentMovement);
 					mat.add(nextPoint, Cell.cells[i]);
+					mat.print();
+					System.in.read();
 					exactSolver(mat, nextPoint, m);
+					mat.add(nextPoint, Cell.EMPTY);
 					solutionStack.pop();
 					cc.incrementPiecesLeft(i);
 				}
