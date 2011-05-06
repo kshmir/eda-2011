@@ -21,5 +21,16 @@ public enum Cell {
 	Cell(Movement[] m) {
 		direction = m;
 	}
-
+	
+	public static Cell convertTo(int value){
+		try
+		{
+			return cells[value];
+		}
+		catch (Exception e)
+		{
+			return Cell.EMPTY;
+		}
+	}
+	
 }
