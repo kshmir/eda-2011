@@ -1,9 +1,7 @@
 package front;
 
-	import java.awt.*;
-	import java.awt.event.*;
-	import java.awt.*;
-	import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 	/** A listener that you attach to the top-level Frame or JFrame of
 	 *  your application, so quitting the frame exits the application.
