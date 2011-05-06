@@ -21,7 +21,7 @@ public class PDSolverApp {
 								RESULT,   RESULT_STEPPED, 
 								BEST_SO_FAR, BEST_SO_FAR_STEPPED, 
 								END_RESULT };
-	public enum PRINT_INTERFACES { CONSOLE, PANEL };
+	public enum PRINT_INTERFACES { CONSOLE, PANEL, CONSOLEPANEL };
 								
 	public static PRINT_ACTIONS action; 
 	
@@ -63,13 +63,20 @@ public class PDSolverApp {
 	
 	private static PRINT_INTERFACES getPrintInterface(String[] args)
 	{
-		return ((args[args.length - 1]).equals("-c")) ? PRINT_INTERFACES.CONSOLE : PRINT_INTERFACES.PANEL;
+		if ((args[args.length - 1]).equals("-c"))
+			return PRINT_INTERFACES.CONSOLE;
+		else if ((args[args.length - 1]).equals("-cp"))
+			return PRINT_INTERFACES.CONSOLEPANEL;
+		else return PRINT_INTERFACES.PANEL;
 	}
 	
 
 	private static PRINT_ACTIONS getParamsActions(String[] args) throws InvalidParamsException {
 		
-		if ((args[args.length - 1]).equals("-c") || args.length == EXACT_PARAMS_SIZE || args[ACTION_INDEX].equals("approx") && args.length == APPROX_PARAMS_SIZE)
+		if ((args[args.length - 1]).equals("-c") ||
+			(args[args.length - 1]).equals("-cp") 
+				|| args.length == EXACT_PARAMS_SIZE 
+				|| args[ACTION_INDEX].equals("approx") && args.length == APPROX_PARAMS_SIZE)
 			return PRINT_ACTIONS.END_RESULT;
 		
 		

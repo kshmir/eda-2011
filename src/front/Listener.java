@@ -61,8 +61,8 @@ public class Listener implements EventListener {
 					break;
 				}
 			}
-		cell.crossRectangle(2, 2);
-		cell.downLeftRectangle(1, 1);
+		//cell.crossRectangle(2, 2);
+		//cell.downLeftRectangle(1, 1);
 		cell.leftRightCell(3, 3);
 		cell.leftUpCell(3, 3);
 		cell.emptyCell(2, 2);
@@ -71,11 +71,11 @@ public class Listener implements EventListener {
 		cell.downLeftCell(6, 6);
 		cell.leftRightCell(5, 6);
 		cell.wallCell(7, 6);
-		cell.startCell(8, 3, 3);
+		//cell.startCell(8, 3, 3);
 
 		frame.setContentPane(cell);
 		frame.repaint();
-		cell.crossRectangle(3, 8);
+		//cell.crossRectangle(3, 8);
 
 	}
 
