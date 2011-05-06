@@ -1,5 +1,6 @@
 package pd;
 
+import java.io.IOException;
 import java.util.Stack;
 
 import pd.utils.Cell;
@@ -49,7 +50,12 @@ public class PDSolver {
 					Movement m = Cell.cells[i].NextDir(currentMovement);
 					mat.add(nextPoint, Cell.cells[i]);
 					mat.print();
-					System.in.read();
+					try {
+						System.in.read();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					exactSolver(mat, nextPoint, m);
 					mat.add(nextPoint, Cell.EMPTY);
 					solutionStack.pop();
