@@ -1,6 +1,6 @@
 package pd.utils;
 
-import pd.utils.Movement;
+import java.util.Random;
 
 public enum Cell {
 	LEFTUP, UPRIGHT, RIGHTDOWN, DOWNLEFT, UPDOWN, LEFTRIGHT, CROSS, WALL, EMPTY, START;
@@ -13,10 +13,16 @@ public enum Cell {
 
 	public static Cell convertTo(int value) {
 		try {
+			
 			return cells[value];
 		} catch (Exception e) {
 			return Cell.EMPTY;
 		}
+	}
+	
+	Cell()
+	{
+		System.out.println(new Random(System.currentTimeMillis()).nextDouble());
 	}
 
 	public void SetStart(Movement e) {

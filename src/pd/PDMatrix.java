@@ -80,27 +80,25 @@ public class PDMatrix {
 	{
 		return startPoint;
 	}
-	
-	
-	
-	
+
 	
 	public void setStart(int i, int j, char ch) {
 		switch(ch)
 		{
 			case 'N':
-				cells[i][j]	
+				Cell.START.SetStart(Movement.UP);
 				break;
 			case 'S':
-				
+				Cell.START.SetStart(Movement.DOWN);
 				break;
 			case 'E':
-				
+				Cell.START.SetStart(Movement.RIGHT);
 				break;
 			case 'W':
-				
+				Cell.START.SetStart(Movement.LEFT);
 				break;
 		}
+		cells[i][j]	= Cell.START;
 	}
 	
 	public void print()
