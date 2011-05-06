@@ -4,7 +4,16 @@ import pd.cells.Cell;
 
 public class CellCountMap {
 	
+	int[] pieces;
+	
+	
+	
+	CellCountMap(){
+		
+	}
+	
 	public int totalPiecesLeft() {
+		
 		return 0;
 	}
 	public int totalPiecesLeft(Class<? extends Cell> t) {
