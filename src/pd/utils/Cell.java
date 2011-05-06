@@ -1,6 +1,5 @@
 package pd.utils;
 
-import java.util.Random;
 
 public enum Cell {
 	LEFTUP, UPRIGHT, RIGHTDOWN, DOWNLEFT, UPDOWN, LEFTRIGHT, CROSS, WALL, EMPTY, START;
