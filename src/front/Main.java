@@ -14,7 +14,8 @@ public class Main{
 				"Pipe Dream", frame);
 		cell.crossCell(0, 2);
 		cell.crossCell(2, 2);
-		cell.downLeftRectangle(1, 1);
+		cell.downLeftCell(1, 1);
+		cell.rightDownCell(5, 9);
 		cell.leftRightCell(3, 3);
 		cell.leftUpCell(3, 3);
 		cell.emptyCell(2, 2);

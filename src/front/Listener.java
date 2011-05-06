@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import pd.PDMatrix;
 import pd.utils.Cell;
+import pd.utils.Point;
 
 public class Listener implements EventListener {
 
@@ -38,10 +39,28 @@ public class Listener implements EventListener {
 				* BackGround.size + 15, cell.getRows() * BackGround.size + 39,
 				"Pipe Dream", frame);
 		for(int i=0;i<p.getCols();i++)
-			for(int j=0;k<p.getRows();j++){
-				
+			for(int j=0;j<p.getRows();j++){
+				switch(p.get(new Point(i,j))){
+				case CROSS:
+					cell.crossCell(i, j);
+					break;
+				case DOWNLEFT:
+					cell.downLeftCell(i, j);
+					break;
+				case EMPTY:
+					cell.emptyCell(i, j);
+					break;
+				case LEFTRIGHT:
+					cell.leftRightCell(i, j);
+					break;
+				case LEFTUP:
+					cell.leftUpCell(i, j);
+					break;
+				case RIGHTDOWN:
+					cell.rightDownCell(i, j);
+					break;
+				}
 			}
-		cell.crossRectangle(0, 2);
 		cell.crossRectangle(2, 2);
 		cell.downLeftRectangle(1, 1);
 		cell.leftRightCell(3, 3);

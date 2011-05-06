@@ -86,7 +86,12 @@ public class BackGround extends JPanel {
 		if (x >= 0 && x < cols && y >= 0 && y < rows)
 			cells[x][y] = new StartCell(x, y, movement);
 	}
-
+	
+	public void rightDownCell(int x, int y) {
+		if (x >= 0 && x < cols && y >= 0 && y < rows)
+			cells[x][y] = new RightDownCell(x, y);
+	}
+	
 	public int getCols() {
 		return cols;
 	}
