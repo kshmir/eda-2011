@@ -1,6 +1,8 @@
 package front;
 
-import javax.swing.*; // For JPanel, etc.
+import javax.swing.JFrame;
+
+import pd.utils.Movement;
 
 public class Main{
 
@@ -21,7 +23,7 @@ public class Main{
 		cell.downLeftCell(6, 6);
 		cell.leftRightCell(5, 6);
 		cell.wallCell(7, 6);
-		cell.startCell(8, 3, 3);
+		cell.startCell(8, 3, Movement.RIGHT);
 
 		frame.setContentPane(cell);
 		frame.repaint();

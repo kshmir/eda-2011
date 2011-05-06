@@ -5,30 +5,32 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
+import pd.utils.Movement;
+
 public class StartCell extends BaseCell {
 
 	private int x,y;
 	private Rectangle2D.Double back;
 	private Rectangle2D.Double rec;
 	
-	public StartCell(int x, int y, int m) {
+	public StartCell(int x, int y, Movement movement) {
 		this.x=x;
 		this.y=y;
 		back = new Rectangle2D.Double(x * size, y * size, size, size);
-		switch (m) {
-		case 0:// up
+		switch (movement) {
+		case UP:// up
 			rec = new Rectangle2D.Double(x * size + size / 3, y * size,
 					size / 3, size * 2 / 3);
 			break;
-		case 1:// down
+		case DOWN:// down
 			rec = new Rectangle2D.Double(x * size + size / 3, y * size + size
 					/ 3, size / 3, size * 2 / 3);
 			break;
-		case 2:// left
+		case LEFT:// left
 			rec = new Rectangle2D.Double(x * size, y * size + size / 3,
 					size * 2 / 3, size / 3);
 			break;
-		case 3:// right
+		case RIGHT:// right
 			rec = new Rectangle2D.Double(x * size + size / 3, y * size + size
 					/ 3, size * 2 / 3, size / 3);
 			break;
