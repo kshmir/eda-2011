@@ -72,18 +72,7 @@ public class PDParser {
 			LeftDownCell.class, UpDownCell.class, LeftRightCell.class, CrossCell.class
 		};
 		
-		Map<Class<? extends Cell>, Integer> cellmap = matriz.getAvailableBlocks();
-		for (Class<? extends Cell> celltype : cells) {
-			try
-			{
-				int n = Integer.parseInt(reader.readLine().trim());
-				cellmap.put(celltype, n);
-			}
-			catch (Exception e)
-			{
-				throw new InvalidFileException();
-			}
-		}
+		
 		return matriz;
 	}
 }

@@ -4,38 +4,45 @@ import pd.cells.Cell;
 
 public class CellCountMap {
 	
-	int[] pieces;
+
+	private Cell[] cells;
+	private int[] counts;
+	private int totalCount = 0;
 	
 	
-	
-	CellCountMap(){
+	public CellCountMap()
+	{
+		counts = new int[7];
+		cells = new Cell[7];
 		
+		// TODO: Initialize cells here.
 	}
-	
 	public int totalPiecesLeft() {
-		
-		return 0;
+		return totalCount;
 	}
-	public int totalPiecesLeft(Class<? extends Cell> t) {
-		return 0;
+	public int totalPiecesLeft(Cell cell) {
+		return totalPiecesLeft(cell.ordinal());
 	}
 	public int totalPiecesLeft(int index) {
-		return 0;
+		return counts[index];
 	}
-	public int setTotalPiecesLeft(Class<? extends Cell> t, int n) {
-		return 0;
+	public void setTotalPiecesLeft(Cell cell, int n) {
+		setTotalPiecesLeft(cell.ordinal(), n);
 	}
-	public int decreasePiecesLeft(Class<? extends Cell> t) {
-		return 0;
+	public void setTotalPiecesLeft(int index, int n) {
+		counts[index] = n;
 	}
-	public int decreasePiecesLeft(int index) {
-		return 0;
+	public void decreasePiecesLeft(Cell t) {
+		decreasePiecesLeft(t.ordinal());
 	}
-	public int incrementPiecesLeft(Class<? extends Cell> t) {
-		return 0;
+	public void decreasePiecesLeft(int index) {
+		counts[index]--;
 	}
-	public int incrementPiecesLeft(int index) {
-		return 0;
+	public void incrementPiecesLeft(Cell t) {
+		incrementPiecesLeft(t.ordinal());
+	}
+	public void incrementPiecesLeft(int index) {
+		counts[index]++;
 	}
 
 }
