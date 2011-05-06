@@ -14,29 +14,22 @@ import pd.utils.Movement;
 import pd.utils.Point;
 
 public class PDMatrix {
-
-	private TreeMap<Class<? extends Cell>,Integer> availableBlocks; 
+ 
 	private Cell[][] cells;
 	private int rows;
 	private int cols;
+
+	
+	private CellCountMap map;
+	private Point startPoint;
 	
 	public PDMatrix (int _rows, int _cols){
 		rows=_rows;
 		cols=_cols;
 		cells = new Cell[rows][cols];
-		availableBlocks = new TreeMap<Class<? extends Cell>, Integer>(new Comparator<Class<? extends Cell>>() {
-			@Override
-			public int compare(Class<? extends Cell> o1,
-					Class<? extends Cell> o2) {
-				return o1.hashCode() - o2.hashCode();
-			}
-		});
 	}
 	
-	public Map<Class<? extends Cell>, Integer> getAvailableBlocks()
-	{
-		return availableBlocks;
-	}
+	
 	
 	public Cell[] siblings (Point p){
 		if (p==null || p.x>=cols || p.y>=rows)
@@ -79,6 +72,22 @@ public class PDMatrix {
 			cells[i][j]=new WallCell(new Point(i,j));
 	}
 
+	
+	public Point getStartPoint()
+	{
+		return startPoint;
+	}
+	
+	public Cell getStartCell()
+	{
+		return get(get(startPoint).nextPoint(startPoint));
+	}
+	
+	public Class<? extends Cell>[] getCellTypes()
+	{
+		return cellClassArray;
+	}
+	
 	public void setStart(int i, int j, char ch) {
 		if (i<cols && j<rows){
 			Movement e = Movement.convertTo(new Integer(ch));
@@ -93,6 +102,7 @@ public class PDMatrix {
 				c = new RightStartCell(new Point(i,j));
 			else
 				c=null;
+			startPoint = new Point(i,j);
 			cells[i][j]=c;  
 		}
 	}

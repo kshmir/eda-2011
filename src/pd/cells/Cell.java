@@ -7,7 +7,9 @@ public abstract class Cell {
 	public Cell(Point p) {
 		position = p;
 	}
+
 	
+	public abstract int getCellID();
 	public abstract Point nextPoint(Point p);
 	
 	public Point nextPoint(int x, int y){
