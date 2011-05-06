@@ -78,6 +78,7 @@ public class Listener implements EventListener {
 				addCell(p.get(new Point(i,j)),i,j);
 				
 			}
+
 		frame.setContentPane(cell);
 		frame.repaint();
 		cell.crossCell(3, 8);
