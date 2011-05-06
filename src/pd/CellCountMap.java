@@ -23,17 +23,20 @@ public class CellCountMap {
 	}
 	public void setTotalPiecesLeft(int index, int n) {
 		counts[index] = n;
+		totalCount += n;
 	}
 	public void decreasePiecesLeft(Cell t) {
 		decreasePiecesLeft(t.ordinal());
 	}
 	public void decreasePiecesLeft(int index) {
 		counts[index]--;
+		totalCount--;
 	}
 	public void incrementPiecesLeft(Cell t) {
 		incrementPiecesLeft(t.ordinal());
 	}
 	public void incrementPiecesLeft(int index) {
 		counts[index]++;
+		totalCount++;
 	}
 }

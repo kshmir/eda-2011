@@ -10,6 +10,19 @@ public enum Movement {
 			Movement.LEFT, Movement.RIGHT, Movement.NONE
 		};
 		
+		private static int[][] compatibles = {
+			{ Cell.DOWNLEFT.ordinal(), Cell.RIGHTDOWN.ordinal(), Cell.UPDOWN.ordinal(), Cell.CROSS.ordinal() },
+			{ Cell.LEFTUP.ordinal(), Cell.UPDOWN.ordinal(), Cell.UPRIGHT.ordinal(), Cell.CROSS.ordinal() },
+			{ Cell.RIGHTDOWN.ordinal(), Cell.UPRIGHT.ordinal(), Cell.LEFTRIGHT.ordinal(), Cell.CROSS.ordinal() },
+			{ Cell.LEFTRIGHT.ordinal(), Cell.LEFTUP.ordinal(), Cell.DOWNLEFT.ordinal(), Cell.CROSS.ordinal() },
+			{ }
+		};
+		
+		public int[] getCompatible()
+		{
+			return compatibles[this.ordinal()];
+		}
+		
 		/**
 		 * Builds a movement from it's internal constructor.
 		 */

@@ -20,6 +20,7 @@ public class PDSolverApp {
 			validate(args);
 			PDMatrix mat = PDParser.buildFromFile(args[FILE_NAME_INDEX]);
 			Stack<Cell> cells = PDSolver.Solve(mat, "exact");
+			System.out.println("Tama–o: " + (cells.size() - 1));
 			print(cells,mat);
 		}
 		catch (InvalidParamsException e) {
