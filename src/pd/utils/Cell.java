@@ -26,6 +26,52 @@ public enum Cell {
 		
 		startDirection = e;
 	}
+	
+	public int[] getCompatibles(Movement e)
+	{
+		switch (this) {
+		case LEFTUP:
+			if (e == Movement.UP)
+				return Movement.UP.getCompatible();
+			else if (e == Movement.LEFT)
+				return Movement.LEFT.getCompatible();
+			break;
+		case UPRIGHT:
+			if (e == Movement.RIGHT)
+				return Movement.RIGHT.getCompatible();
+			else if (e == Movement.UP)
+				return Movement.UP.getCompatible();
+			break;
+		case RIGHTDOWN:
+			if (e == Movement.DOWN)
+				return Movement.DOWN.getCompatible();
+			else if (e == Movement.RIGHT)
+				return Movement.RIGHT.getCompatible();
+			break;
+		case DOWNLEFT:
+			if (e == Movement.LEFT)
+				return Movement.LEFT.getCompatible();
+			else if (e == Movement.DOWN)
+				return Movement.DOWN.getCompatible();
+			break;
+
+		case LEFTRIGHT:
+			if (e != Movement.RIGHT && e != Movement.LEFT)
+				return Movement.NONE.getCompatible();
+			else
+				return e.getCompatible();
+		case UPDOWN:
+			if (e != Movement.UP && e != Movement.DOWN)
+				return Movement.NONE.getCompatible();
+			else
+				return e.getCompatible();
+		case START:
+			return startDirection.getCompatible();
+		case CROSS:
+			return e.getCompatible();
+		}
+		return Movement.NONE.getCompatible();
+	}
 
 	public Movement NextDir(Movement e) {
 
@@ -45,8 +91,8 @@ public enum Cell {
 		case RIGHTDOWN:
 			if (e == Movement.LEFT)
 				return Movement.DOWN;
-			else if (e == Movement.DOWN)
-				return Movement.LEFT;
+			else if (e == Movement.UP)
+				return Movement.RIGHT;
 			break;
 		case DOWNLEFT:
 			if (e == Movement.UP)

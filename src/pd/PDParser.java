@@ -35,19 +35,17 @@ public class PDParser {
 		boolean startSet = false;
 		
 		for (int i = 0; i < rows; i++) {
-			line = reader.readLine().trim();
+			line = reader.readLine();
 			
-			if (line.length() > cols)
-				throw new InvalidFileException();
-			for (int j = 0; j < line.length(); j++) {
+			int len = (line.length() > 6) ? 6 : line.length();
+			for (int j = 0; j < len; j++) {
 				char c = line.charAt(j);
-				
 				if (startSet && (c == 'N' || c == 'S' || c == 'E' || c == 'W'))
 					throw new InvalidFileException();
 				else if (c == '#')
-					matriz.putWall(i,j);
+					matriz.putWall(j,i);
 				else if (c == 'N' || c == 'S' || c == 'E' || c == 'W') 	{
-					matriz.setStart(i,j,c);
+					matriz.setStart(j,i,c);
 					startSet = true;
 				}
 			}

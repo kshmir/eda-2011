@@ -12,6 +12,7 @@ public class PDMatrix {
 	private int rows;
 	private int cols;
 
+	public int availablePoints = 0;
 	
 	private CellCountMap map;
 	private Point startPoint;
@@ -19,12 +20,13 @@ public class PDMatrix {
 	public PDMatrix (int _rows, int _cols){
 		rows=_rows;
 		cols=_cols;
-		cells = new Cell[rows][cols];
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
+		cells = new Cell[cols][rows];
+		for (int i = 0; i < cols; i++) {
+			for (int j = 0; j < rows; j++) {
 				cells[i][j] = Cell.EMPTY;
 			}
 		}
+		availablePoints = rows * cols;
 		map = new CellCountMap();
 	}
 	
@@ -40,16 +42,15 @@ public class PDMatrix {
 		
 		Cell[] sibs = new Cell[4];
 		Movement e = Movement.UP;
-		for (int i = 0 ;i>4;i++){
+		for (int i = 0 ;i<4;i++){
 			sibs[i]=get(p.translate(e.versor()));
 			e=Movement.convertTo(i+1);
 		}
 		return sibs;
-
 	}
 
 	public Cell get (Point p){
-		if (p==null || p.x>=cols || p.y>=rows)
+		if (p==null || p.x>=cols || p.y>=rows || p.x < 0 || p.y < 0)
 			return null;
 		
 		return  cells[p.x][p.y];
@@ -57,17 +58,25 @@ public class PDMatrix {
 
 	public void remove (Point p){
 		if (p!=null && p.x<cols && p.y<rows)
+		{
 			cells[p.x][p.y]=Cell.EMPTY;
+			availablePoints++;
+		}
+		
 	}
 	
 	public boolean add (Point p, Cell cell){
 		cells[p.x][p.y]=cell;
+		availablePoints += (cell == Cell.EMPTY) ? 1 : -1;
 		return true;
 	}
 
 	public void putWall(int x, int y) {
 		if (x<cols && y<rows)
+		{
 			cells[x][y]= Cell.WALL;
+			availablePoints--;
+		}
 	}
 
 	
@@ -86,15 +95,16 @@ public class PDMatrix {
 			case 'S':
 				Cell.setStart(Movement.DOWN);
 				break;
-			case 'E':
-				Cell.setStart(Movement.RIGHT);
-				break;
 			case 'W':
 				Cell.setStart(Movement.LEFT);
+				break;
+			case 'E':
+				Cell.setStart(Movement.RIGHT);
 				break;
 		}
 		startPoint =new Point(x,y);
 		cells[x][y]	= Cell.START;
+		availablePoints--;
 	}
 	
 	public void print()
@@ -102,37 +112,37 @@ public class PDMatrix {
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				switch(cells[j][i]) {
-					case CROSS:
-						System.out.print("┼");
-						break;
-					case UPDOWN:
-						System.out.print("│");
-						break;
-					case LEFTRIGHT:
-						System.out.print("─");
-						break;
-					case LEFTUP:
-						System.out.print("┘");
-						break;
-					case DOWNLEFT:
-						System.out.print("┐");
-						break;
-					case RIGHTDOWN:
-						System.out.print("┌");
-						break;
-					case UPRIGHT:
-						System.out.print("└");
-						break;
-					case START:
-						System.out.print("*");
-						break;
-					case WALL:
-						System.out.print("█");
-						break;
-					case EMPTY:
-						System.out.print(" ");
-						break;
-				}
+				case CROSS:
+					System.out.print("┼");
+					break;
+				case UPDOWN:
+					System.out.print("│");
+					break;
+				case LEFTRIGHT:
+					System.out.print("─");
+					break;
+				case LEFTUP:
+					System.out.print("┘");
+					break;
+				case DOWNLEFT:
+					System.out.print("┐");
+					break;
+				case RIGHTDOWN:
+					System.out.print("┌");
+					break;
+				case UPRIGHT:
+					System.out.print("└");
+					break;
+				case START:
+					System.out.print("*");
+					break;
+				case WALL:
+					System.out.print("█");
+					break;
+				case EMPTY:
+					System.out.print(" ");
+					break;
+			}
 				
 				
 				
