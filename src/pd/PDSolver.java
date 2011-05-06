@@ -27,23 +27,20 @@ public class PDSolver {
 		if (currentMovement == Movement.NONE)
 			return;
 		
-		Point nextPoint = currentMovement.applyTo(p);
 		
-		if (!mat.contains(nextPoint)) {
-			
-			if (bestStack.size() < solutionStack.size())
-			{
-				mat.print();
-				try {
-					System.in.read();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				bestStack = (Stack<Point>) solutionStack.clone();
+		Point nextPoint = p;
+		do
+		{
+			nextPoint = currentMovement.applyTo(nextPoint);
+
+			if (!mat.contains(nextPoint)) {
+				if (bestStack.size() < solutionStack.size())
+					bestStack = (Stack<Point>) solutionStack.clone();
+				return;
 			}
-			return;
-		}
+		} while(mat.get(nextPoint) == Cell.CROSS);
+		
+		
 		
 		
 		
@@ -51,13 +48,13 @@ public class PDSolver {
 		{
 			CellCountMap cc = mat.getCellCountMap();
 			for (int i = 0; i < 7; i++) {
-				
 				if (cc.totalPiecesLeft(i) > 0)
 				{
 					cc.decreasePiecesLeft(i);
 					solutionStack.push(nextPoint);
 					Movement m = Cell.cells[i].NextDir(currentMovement);
 					mat.add(nextPoint, Cell.cells[i]);
+					
 					
 					exactSolver(mat, nextPoint, m);
 					mat.add(nextPoint, Cell.EMPTY);
