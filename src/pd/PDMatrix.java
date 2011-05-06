@@ -86,11 +86,11 @@ public class PDMatrix {
 			case 'S':
 				Cell.setStart(Movement.DOWN);
 				break;
-			case 'E':
-				Cell.setStart(Movement.RIGHT);
-				break;
 			case 'W':
 				Cell.setStart(Movement.LEFT);
+				break;
+			case 'E':
+				Cell.setStart(Movement.RIGHT);
 				break;
 		}
 		startPoint =new Point(x,y);
@@ -103,31 +103,31 @@ public class PDMatrix {
 			for (int j = 0; j < cols; j++) {
 				switch(cells[j][i]) {
 					case CROSS:
-						System.out.print("┼");
+						System.out.print("â”¼");
 						break;
 					case UPDOWN:
-						System.out.print("│");
+						System.out.print("â”‚");
 						break;
 					case LEFTRIGHT:
-						System.out.print("─");
+						System.out.print("â”€");
 						break;
 					case LEFTUP:
-						System.out.print("┘");
+						System.out.print("â”˜");
 						break;
 					case DOWNLEFT:
-						System.out.print("┐");
+						System.out.print("â”�");
 						break;
 					case RIGHTDOWN:
-						System.out.print("┌");
+						System.out.print("â”Œ");
 						break;
 					case UPRIGHT:
-						System.out.print("└");
+						System.out.print("â””");
 						break;
 					case START:
 						System.out.print("*");
 						break;
 					case WALL:
-						System.out.print("█");
+						System.out.print("â–ˆ");
 						break;
 					case EMPTY:
 						System.out.print(" ");
