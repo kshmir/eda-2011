@@ -56,7 +56,7 @@ public class Listener implements EventListener {
 	public void removeCell(int x, int y) {
 		if(!hasStarted)
 			return;
-		
+		cell.remove(x, y);
 	}
 
 	@Override
