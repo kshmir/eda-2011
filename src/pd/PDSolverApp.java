@@ -14,7 +14,7 @@ public class PDSolverApp {
 		try {
 			validate(args);
 			PDMatrix mat = PDParser.buildFromFile(args[FILE_NAME_INDEX]);
-			
+			mat.print();
 			
 			
 			
