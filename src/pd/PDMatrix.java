@@ -57,7 +57,7 @@ public class PDMatrix {
 
 	public void remove (Point p){
 		if (p!=null && p.x<cols && p.y<rows)
-			cells[p.y][p.x]=null;
+			cells[p.y][p.x]=Cell.EMPTY;
 	}
 	
 	public boolean add (Point p, Cell cell){
