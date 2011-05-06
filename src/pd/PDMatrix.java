@@ -110,5 +110,10 @@ public class PDMatrix {
 			System.out.println();
 		}
 	}
+
+
+	public boolean contains(Point nextPoint) {
+		return (nextPoint.x >= 0 && nextPoint.y >= 0 && nextPoint.y < rows && nextPoint.x < cols);
+	}
 	
 }

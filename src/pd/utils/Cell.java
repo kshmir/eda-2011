@@ -5,7 +5,7 @@ import java.util.Random;
 public enum Cell {
 	LEFTUP, UPRIGHT, RIGHTDOWN, DOWNLEFT, UPDOWN, LEFTRIGHT, CROSS, WALL, EMPTY, START;
 
-	private static Movement direction;
+	public static Movement startDirection;
 
 	public static Cell[] cells = { Cell.LEFTUP, Cell.UPRIGHT, Cell.RIGHTDOWN,
 			Cell.DOWNLEFT, Cell.UPDOWN, Cell.LEFTRIGHT, Cell.CROSS, Cell.WALL,
@@ -24,7 +24,7 @@ public enum Cell {
 
 	public static void setStart(Movement e) {
 		
-		direction = e;
+		startDirection = e;
 	}
 
 	public Movement NextDir(Movement e) {
@@ -55,7 +55,7 @@ public enum Cell {
 				return Movement.DOWN;
 			break;
 		case START:
-			return direction;
+			return startDirection;
 		case LEFTRIGHT:
 			if (e != Movement.RIGHT || e != Movement.LEFT)
 				return Movement.NONE;

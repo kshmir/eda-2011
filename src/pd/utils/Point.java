@@ -14,6 +14,10 @@ public class Point {
 		return new Point(x+p.x, y+p.y);
 	}
 	
+	public Point translate(Movement m){
+		return translate(m.versor());
+	}
+	
 	public Point(int x, int y) {
 		this.x=x;
 		this.y=y;
