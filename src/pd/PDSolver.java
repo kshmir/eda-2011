@@ -1,6 +1,7 @@
 package pd;
 
 import pd.cells.Cell;
+import pd.utils.Movement;
 import pd.utils.Point;
 
 public class PDSolver {
@@ -10,7 +11,7 @@ public class PDSolver {
 			exactSolver(mat,mat.getStartPoint(), mat.getStartCell());
 	}	
 	
-	private static void exactSolver(PDMatrix mat, Point p, Cell currentCell)
+	private static void exactSolver(PDMatrix mat, Point p, Cell currentCell, Movement d)
 	{
 		for (int i = 0; i < 7; i++) {
 			CellCountMap cc = mat.getCellCountMap();

@@ -1,13 +1,5 @@
 package pd;
 
-import pd.cells.Cell;
-import pd.cells.DownStartCell;
-import pd.cells.LeftStartCell;
-import pd.cells.RightStartCell;
-import pd.cells.UpStartCell;
-import pd.cells.WallCell;
-import pd.utils.Movement;
-import pd.utils.Point;
 
 public class PDMatrix {
  
@@ -90,18 +82,27 @@ public class PDMatrix {
 		if (i<cols && j<rows){
 			Movement e = Movement.convertTo(new Integer(ch));
 			Cell c;
-			if(e==Movement.UP)
+			if(e == Movement.UP)
 				c = new UpStartCell(new Point(i,j));
-			if(e==Movement.DOWN)
+			if(e == Movement.DOWN)
 				c = new DownStartCell(new Point(i,j));
-			if(e==Movement.LEFT)
+			if(e == Movement.LEFT)
 				c = new LeftStartCell(new Point(i,j));
-			if(e==Movement.RIGHT)
+			if(e == Movement.RIGHT)
 				c = new RightStartCell(new Point(i,j));
 			else
 				c=null;
 			startPoint = new Point(i,j);
 			cells[i][j]=c;  
+		}
+	}
+	
+	public void print()
+	{
+		for (int i = 0; i < cols; i++) {
+			for (int j = 0; j < rows; j++) {
+				System.out.print(cells[i][j].)
+			}
 		}
 	}
 	
