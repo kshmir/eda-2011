@@ -1,15 +1,13 @@
 package front;
 
-import java.util.Stack;
 
 import javax.swing.JFrame;
 
 import pd.PDMatrix;
 import pd.utils.Cell;
-import pd.utils.Movement;
 import pd.utils.Point;
 
-public class Listener implements EventListener {
+public class Listener extends EventListener {
 
 	private JFrame frame = new JFrame("Pipe Dream");
 	private BackGround cell;
@@ -59,12 +57,6 @@ public class Listener implements EventListener {
 		cell.remove(x, y);
 	}
 
-	@Override
-	public void addAll(Stack s, PDMatrix p) {
-		if(!hasStarted)
-			return;
-		
-	}
 
 	@Override
 	public void initialize(PDMatrix p) {
@@ -79,9 +71,8 @@ public class Listener implements EventListener {
 				
 			}
 
-		frame.setContentPane(cell);
-		frame.repaint();
-		cell.crossCell(3, 8);
+//		frame.setContentPane(cell);
+//		frame.repaint();
 
 	}
 
