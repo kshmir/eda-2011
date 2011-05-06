@@ -3,41 +3,69 @@ package pd.utils;
 import pd.utils.Movement;
 
 public enum Cell {
-	LEFTUP(new Movement[] { Movement.LEFT, Movement.UP }), UPRIGHT(
-			new Movement[] { Movement.UP, Movement.RIGHT }), RIGHTDOWN(
-			new Movement[] { Movement.RIGHT, Movement.DOWN }), DOWNLEFT(
-			new Movement[] { Movement.LEFT, Movement.DOWN }), UPDOWN(
-			new Movement[] { Movement.DOWN, Movement.UP }), LEFTRIGHT(
-			new Movement[] { Movement.LEFT, Movement.RIGHT }), CROSS(
-			new Movement[] { Movement.LEFT, Movement.RIGHT, Movement.DOWN,
-					Movement.UP }), WALL(new Movement[] { Movement.NONE }), EMPTY(new Movement[] { Movement.NONE }), START(
-			new Movement[] { Movement.NONE });
+	LEFTUP, UPRIGHT, RIGHTDOWN, DOWNLEFT, UPDOWN, LEFTRIGHT, CROSS, WALL, EMPTY, START;
 
-	private Movement[] direction;
+	private Movement direction;
 	public static Cell[] cells = { Cell.LEFTUP, Cell.UPRIGHT, Cell.RIGHTDOWN,
 			Cell.DOWNLEFT, Cell.UPDOWN, Cell.LEFTRIGHT, Cell.CROSS, Cell.WALL,
 			Cell.EMPTY, Cell.START };
 
-	Cell(Movement[] m) {
-		direction = m;
-	}
-	
-	public static Cell convertTo(int value){
-		try
-		{
+	public static Cell convertTo(int value) {
+		try {
 			return cells[value];
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			return Cell.EMPTY;
 		}
 	}
-	public Movement NextDir(Movement e){
-		if (direction.length<=1){
-			return direction[0]; 
-		}
-		
-		return null;
+
+	public void SetStart(Movement e) {
+		direction = e;
 	}
-	
+
+	public Movement NextDir(Movement e) {
+
+		switch (this) {
+		case LEFTUP:
+			if (e == Movement.RIGHT)
+				return Movement.UP;
+			else if (e == Movement.DOWN)
+				return Movement.LEFT;
+			break;
+		case UPRIGHT:
+			if (e == Movement.DOWN)
+				return Movement.RIGHT;
+			else if (e == Movement.LEFT)
+				return Movement.UP;
+			break;
+		case RIGHTDOWN:
+			if (e == Movement.LEFT)
+				return Movement.DOWN;
+			else if (e == Movement.RIGHT)
+				return Movement.UP;
+			break;
+		case DOWNLEFT:
+			if (e == Movement.UP)
+				return Movement.LEFT;
+			else if (e == Movement.RIGHT)
+				return Movement.DOWN;
+			break;
+		case START:
+			return direction;
+		case LEFTRIGHT:
+			if (e != Movement.RIGHT || e != Movement.LEFT)
+				return Movement.NONE;
+			else
+				return e;
+		case UPDOWN:
+			if (e != Movement.UP || e != Movement.DOWN)
+				return Movement.NONE;
+			else
+				return e;
+
+		case CROSS:
+			return e;
+		}
+		return Movement.NONE;
+	}
+
 }
