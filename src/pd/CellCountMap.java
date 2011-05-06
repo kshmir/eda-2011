@@ -4,6 +4,7 @@ import pd.cells.Cell;
 
 public class CellCountMap {
 	
+
 	private Cell[] cells;
 	private int[] counts;
 	private int totalCount = 0;
