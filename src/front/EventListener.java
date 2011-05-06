@@ -11,4 +11,6 @@ public interface EventListener {
 	public void removeCell(int x, int y);
 
 	public void addAll(Stack s, PDMatrix p);
+	
+	public void initialize(PDMatrix p);
 }
