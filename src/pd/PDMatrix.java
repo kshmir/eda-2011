@@ -113,31 +113,31 @@ public class PDMatrix {
 			for (int j = 0; j < cols; j++) {
 				switch(cells[j][i]) {
 				case CROSS:
-					System.out.print("┼");
+					System.out.print("â”¼");
 					break;
 				case UPDOWN:
-					System.out.print("│");
+					System.out.print("â”‚");
 					break;
 				case LEFTRIGHT:
-					System.out.print("─");
+					System.out.print("â”€");
 					break;
 				case LEFTUP:
-					System.out.print("┘");
+					System.out.print("â”˜");
 					break;
 				case DOWNLEFT:
-					System.out.print("┐");
+					System.out.print("â”�");
 					break;
 				case RIGHTDOWN:
-					System.out.print("┌");
+					System.out.print("â”Œ");
 					break;
 				case UPRIGHT:
-					System.out.print("└");
+					System.out.print("â””");
 					break;
 				case START:
 					System.out.print("*");
 					break;
 				case WALL:
-					System.out.print("█");
+					System.out.print("â–ˆ");
 					break;
 				case EMPTY:
 					System.out.print(" ");
@@ -155,6 +155,12 @@ public class PDMatrix {
 
 	public boolean contains(Point nextPoint) {
 		return (nextPoint.x >= 0 && nextPoint.y >= 0 && nextPoint.y < rows && nextPoint.x < cols);
+	}
+	public int getRows(){
+		return rows;
+	}
+	public int getCols(){
+		return cols;
 	}
 	
 }
