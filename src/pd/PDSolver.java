@@ -12,7 +12,9 @@ public class PDSolver {
 	public static Stack<Point> Solve(PDMatrix mat, String method)
 	{
 		if (method.equals("exact"))
-			exactSolver(mat,mat.getStartPoint(),mat.get(mat.getStartPoint()).NextDir(Cell.startDirection));
+			exactSolver(mat,
+						mat.getStartPoint(),
+						mat.get(mat.getStartPoint()).NextDir(Cell.startDirection));
 		
 		return bestStack;
 	}	

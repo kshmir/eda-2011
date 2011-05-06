@@ -98,6 +98,7 @@ public class PDMatrix {
 				Cell.setStart(Movement.LEFT);
 				break;
 		}
+		startPoint =new Point(i,j);
 		cells[i][j]	= Cell.START;
 	}
 	
