@@ -72,14 +72,9 @@ public class BackGround extends JPanel {
 			cells[x][y] = new EmptyCell(x, y);
 	}
 
-	public void crossRectangle(int x, int y) {
+	public void crossCell(int x, int y) {
 		if (x >= 0 && x < cols && y >= 0 && y < rows)
 			cells[x][y] = new CrossCell(x, y);
-	}
-
-	public void downLeftRectangle(int x, int y) {
-		if (x >= 0 && x < cols && y >= 0 && y < rows)
-			cells[x][y] = new DownLeftCell(x, y);
 	}
 
 	public void wallCell(int x, int y) {

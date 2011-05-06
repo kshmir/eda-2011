@@ -12,8 +12,8 @@ public class Main{
 		frame = WindowUtilities.openInJFrame(cell, cell.getCols()
 				* BackGround.size + 15, cell.getRows() * BackGround.size + 39,
 				"Pipe Dream", frame);
-		cell.crossRectangle(0, 2);
-		cell.crossRectangle(2, 2);
+		cell.crossCell(0, 2);
+		cell.crossCell(2, 2);
 		cell.downLeftRectangle(1, 1);
 		cell.leftRightCell(3, 3);
 		cell.leftUpCell(3, 3);
@@ -27,6 +27,6 @@ public class Main{
 
 		frame.setContentPane(cell);
 		frame.repaint();
-		cell.crossRectangle(3, 8);
+		cell.crossCell(3, 8);
 	}
 }
