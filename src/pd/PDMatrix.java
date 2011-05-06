@@ -86,16 +86,16 @@ public class PDMatrix {
 		switch(ch)
 		{
 			case 'N':
-				Cell.START.SetStart(Movement.UP);
+				Cell.setStart(Movement.UP);
 				break;
 			case 'S':
-				Cell.START.SetStart(Movement.DOWN);
+				Cell.setStart(Movement.DOWN);
 				break;
 			case 'E':
-				Cell.START.SetStart(Movement.RIGHT);
+				Cell.setStart(Movement.RIGHT);
 				break;
 			case 'W':
-				Cell.START.SetStart(Movement.LEFT);
+				Cell.setStart(Movement.LEFT);
 				break;
 		}
 		cells[i][j]	= Cell.START;

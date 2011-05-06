@@ -20,12 +20,9 @@ public enum Cell {
 		}
 	}
 	
-	Cell()
-	{
-		System.out.println(new Random(System.currentTimeMillis()).nextDouble());
-	}
+	Cell()	{}
 
-	public static void SetStart(Movement e) {
+	public static void setStart(Movement e) {
 		
 		direction = e;
 	}

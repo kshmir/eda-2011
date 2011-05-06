@@ -1,6 +1,6 @@
 package pd;
 
-import pd.cells.Cell;
+import pd.utils.Cell;
 import pd.utils.Point;
 
 public class PDMatrixTest {

@@ -1,6 +1,6 @@
 package pd;
 
-import pd.cells.Cell;
+import pd.utils.Cell;
 import pd.utils.Movement;
 import pd.utils.Point;
 
@@ -8,10 +8,10 @@ public class PDSolver {
 	public static void Solve(PDMatrix mat, String method)
 	{
 		if (method.equals("exact"))
-			exactSolver(mat,mat.getStartPoint(), mat.getStartCell());
+			exactSolver(mat,mat.getStartPoint());
 	}	
 	
-	private static void exactSolver(PDMatrix mat, Point p, Cell currentCell, Movement d)
+	private static void exactSolver(PDMatrix mat, Point p)
 	{
 		for (int i = 0; i < 7; i++) {
 			CellCountMap cc = mat.getCellCountMap();
