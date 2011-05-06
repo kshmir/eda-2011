@@ -14,10 +14,7 @@ public class PDSolverApp {
 		try {
 			validate(args);
 			PDMatrix mat = PDParser.buildFromFile(args[FILE_NAME_INDEX]);
-			mat.print();
-			
-			
-			
+			System.out.println(PDSolver.Solve(mat, "exact").size());
 		}
 		catch (InvalidParamsException e) {
 			System.out.println("Invalid Params!");

@@ -55,15 +55,15 @@ public class PDParser {
 		
 		CellCountMap map = matriz.getCellCountMap();
 		for (int i = 0; i < 7; i++) {
-			try
-			{
+			try	{
 				map.setTotalPiecesLeft(i, Integer.parseInt(reader.readLine().trim()));
 			}
-			catch (Exception e)
-			{
+			catch (Exception e)	{
 				throw new InvalidFileException();
 			}
 		}
+		if (!startSet)
+			throw new InvalidFileException();
 		
 		
 		return matriz;

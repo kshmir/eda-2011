@@ -1,11 +1,11 @@
 package pd.utils;
 
-import pd.utils.Movement;
+import java.util.Random;
 
 public enum Cell {
 	LEFTUP, UPRIGHT, RIGHTDOWN, DOWNLEFT, UPDOWN, LEFTRIGHT, CROSS, WALL, EMPTY, START;
 
-	private static Movement direction;
+	public static Movement startDirection;
 
 	public static Cell[] cells = { Cell.LEFTUP, Cell.UPRIGHT, Cell.RIGHTDOWN,
 			Cell.DOWNLEFT, Cell.UPDOWN, Cell.LEFTRIGHT, Cell.CROSS, Cell.WALL,
@@ -13,15 +13,18 @@ public enum Cell {
 
 	public static Cell convertTo(int value) {
 		try {
+			
 			return cells[value];
 		} catch (Exception e) {
 			return Cell.EMPTY;
 		}
 	}
+	
+	Cell()	{}
 
-	public static void SetStart(Movement e) {
+	public static void setStart(Movement e) {
 		
-		direction = e;
+		startDirection = e;
 	}
 
 	public Movement NextDir(Movement e) {
@@ -51,7 +54,8 @@ public enum Cell {
 			else if (e == Movement.RIGHT)
 				return Movement.DOWN;
 			break;
-			case LEFTRIGHT:
+
+		case LEFTRIGHT:
 			if (e != Movement.RIGHT || e != Movement.LEFT)
 				return Movement.NONE;
 			else

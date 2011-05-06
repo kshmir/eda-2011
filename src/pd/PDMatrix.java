@@ -80,27 +80,26 @@ public class PDMatrix {
 	{
 		return startPoint;
 	}
-	
-	
-	
-	
+
 	
 	public void setStart(int i, int j, char ch) {
 		switch(ch)
 		{
 			case 'N':
-				cells[i][j]	
+				Cell.setStart(Movement.UP);
 				break;
 			case 'S':
-				
+				Cell.setStart(Movement.DOWN);
 				break;
 			case 'E':
-				
+				Cell.setStart(Movement.RIGHT);
 				break;
 			case 'W':
-				
+				Cell.setStart(Movement.LEFT);
 				break;
 		}
+		startPoint =new Point(i,j);
+		cells[i][j]	= Cell.START;
 	}
 	
 	public void print()
@@ -111,6 +110,11 @@ public class PDMatrix {
 			}
 			System.out.println();
 		}
+	}
+
+
+	public boolean contains(Point nextPoint) {
+		return (nextPoint.x >= 0 && nextPoint.y >= 0 && nextPoint.y < rows && nextPoint.x < cols);
 	}
 	
 }
