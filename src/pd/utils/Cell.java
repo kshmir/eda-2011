@@ -45,8 +45,8 @@ public enum Cell {
 		case RIGHTDOWN:
 			if (e == Movement.LEFT)
 				return Movement.DOWN;
-			else if (e == Movement.DOWN)
-				return Movement.LEFT;
+			else if (e == Movement.UP)
+				return Movement.RIGHT;
 			break;
 		case DOWNLEFT:
 			if (e == Movement.UP)
