@@ -1,8 +1,7 @@
 package front;
 
-import javax.swing.*; // For JPanel, etc.
+import javax.swing.JFrame;
 
-import pd.utils.Cell;
 import pd.utils.Movement;
 
 public class Main{
