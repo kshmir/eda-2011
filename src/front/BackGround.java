@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import pd.utils.Movement;
+
 public class BackGround extends JPanel {
 	public static int size = 43;
 	private int rows, cols;
@@ -85,9 +87,9 @@ public class BackGround extends JPanel {
 			cells[x][y] = new WallCell(x, y);
 	}
 
-	public void startCell(int x, int y, int m) {
+	public void startCell(int x, int y, Movement movement) {
 		if (x >= 0 && x < cols && y >= 0 && y < rows)
-			cells[x][y] = new StartCell(x, y, m);
+			cells[x][y] = new StartCell(x, y, movement);
 	}
 
 	public int getCols() {

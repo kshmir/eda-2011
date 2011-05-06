@@ -2,6 +2,9 @@ package front;
 
 import javax.swing.*; // For JPanel, etc.
 
+import pd.utils.Cell;
+import pd.utils.Movement;
+
 public class Main{
 
 	public static void main(String[] args) {
@@ -21,7 +24,7 @@ public class Main{
 		cell.downLeftCell(6, 6);
 		cell.leftRightCell(5, 6);
 		cell.wallCell(7, 6);
-		cell.startCell(8, 3, 3);
+		cell.startCell(8, 3, Movement.RIGHT);
 
 		frame.setContentPane(cell);
 		frame.repaint();
