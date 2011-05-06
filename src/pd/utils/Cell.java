@@ -51,9 +51,7 @@ public enum Cell {
 			else if (e == Movement.RIGHT)
 				return Movement.DOWN;
 			break;
-		case START:
-			return direction;
-		case LEFTRIGHT:
+			case LEFTRIGHT:
 			if (e != Movement.RIGHT || e != Movement.LEFT)
 				return Movement.NONE;
 			else
