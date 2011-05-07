@@ -19,7 +19,6 @@ public abstract class EventListener {
 		while(!stack.isEmpty())
 		{
 			Cell c = stack.pop();
-//			mat.add(p, c);
 			addCell(c, p.x, p.y);
 			m = c.NextDir(m);
 			p = m.applyTo(p);
