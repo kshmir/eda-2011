@@ -1,22 +1,26 @@
 package front;
 
-
 import javax.swing.JFrame;
 
 import pd.PDMatrix;
 import pd.utils.Cell;
 import pd.utils.Point;
 
+/**
+ * @author Murciélagos This implementation of the {@link EventListener} will be
+ *         the default one, it's very simple to visualize the algorithm with it.
+ */
 public class Listener extends EventListener {
 
 	private JFrame frame = new JFrame("Pipe Dream");
 	private BackGround cell;
-	private boolean hasStarted=false;
+	private boolean hasStarted = false;
+
 	@Override
 	public void addCell(Cell c, int i, int j) {
-		if(!hasStarted)
+		if (!hasStarted)
 			return;
-		switch(c){
+		switch (c) {
 		case CROSS:
 			cell.crossCell(i, j);
 			break;
@@ -52,27 +56,26 @@ public class Listener extends EventListener {
 
 	@Override
 	public void removeCell(int x, int y) {
-		if(!hasStarted)
+		if (!hasStarted)
 			return;
 		cell.remove(x, y);
 	}
 
-
 	@Override
 	public void initialize(PDMatrix p) {
-		hasStarted=true;
+		hasStarted = true;
 		cell = new BackGround(p.getCols(), p.getRows());
 		frame = WindowUtilities.openInJFrame(cell, cell.getCols()
 				* BackGround.size + 15, cell.getRows() * BackGround.size + 39,
 				"Pipe Dream", frame);
-		for(int i=0;i<p.getCols();i++)
-			for(int j=0;j<p.getRows();j++){
-				addCell(p.get(new Point(i,j)),i,j);
-				
+		for (int i = 0; i < p.getCols(); i++)
+			for (int j = 0; j < p.getRows(); j++) {
+				addCell(p.get(new Point(i, j)), i, j);
+
 			}
 
-//		frame.setContentPane(cell);
-//		frame.repaint();
+		// frame.setContentPane(cell);
+		// frame.repaint();
 
 	}
 
