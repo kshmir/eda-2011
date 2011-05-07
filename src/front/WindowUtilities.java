@@ -6,6 +6,11 @@ import front.ExitListener;
 
 import java.awt.*;
 
+/**
+ * @author Murciélagos
+ *
+ * This class helps to build the main frame, it only contains static functions, it shouldn't be instanced.
+ */
 public class WindowUtilities {
 
 	public static void setNativeLookAndFeel() {

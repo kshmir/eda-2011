@@ -7,15 +7,20 @@ import java.awt.geom.Rectangle2D;
 
 import pd.utils.Movement;
 
+/**
+ * @author Maximo This class is different from the others subclasses as it
+ *         receives an extra argument in the builder to determinate which kind
+ *         of start it should draw.
+ */
 public class StartCell extends BaseCell {
 
-	private int x,y;
+	private int x, y;
 	private Rectangle2D.Double back;
 	private Rectangle2D.Double rec;
-	
+
 	public StartCell(int x, int y, Movement movement) {
-		this.x=x;
-		this.y=y;
+		this.x = x;
+		this.y = y;
 		back = new Rectangle2D.Double(x * size, y * size, size, size);
 		switch (movement) {
 		case UP:// up
@@ -36,7 +41,7 @@ public class StartCell extends BaseCell {
 			break;
 		}
 	}
-	
+
 	@Override
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
@@ -46,8 +51,9 @@ public class StartCell extends BaseCell {
 		g2d.draw(back);
 		g2d.setColor(color);
 		g2d.fill(rec);
-		
+
 	}
+
 	@Override
 	public int x() {
 		// TODO Auto-generated method stub
