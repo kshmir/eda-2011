@@ -1,6 +1,11 @@
 package pd.utils;
 
 
+/**
+ * @author Murciélagos
+ * This enumerator is used for a fast recognition of the direction received and ... (EZE COMENTA ESTO)
+ *
+ */
 public enum Cell {
 	LEFTUP, UPRIGHT, RIGHTDOWN, DOWNLEFT, UPDOWN, LEFTRIGHT, CROSS, WALL, EMPTY, START;
 
