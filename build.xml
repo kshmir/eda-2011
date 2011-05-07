@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SlipSlide" default="dist" basedir=".">
+        <!-- Compila el proyecto, deja los archivos class en el directorio bin -->
+        <target name="compile">
+                <mkdir dir="bin" />
+				<javac srcdir="src" destdir="bin" />
+        </target>
+        <target name="dist" depends="compile">
+                <jar destfile="tpe.jar" basedir="bin">
+                        <manifest>
+                                <attribute name="Main-Class" value="pd.PDSolverApp" />
+                        </manifest>
+                </jar>
+        </target>
+        <!-- Borra todos los archivos generados luego de compilar. -->
+        <target name="clean">
+                <delete dir="bin" />
+                <delete dir="doc" />
+                <delete file="tpe.jar" />
+        </target>
+</project>

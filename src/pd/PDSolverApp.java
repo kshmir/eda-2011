@@ -7,6 +7,11 @@ import pd.solvers.PDSolver;
 import pd.utils.Cell;
 import pd.utils.Movement;
 import pd.utils.Point;
+import front.ConsoleListener;
+import front.EventListener;
+import front.PrintAction;
+import front.MultipleListener;
+import front.PanelListener;
 
 public class PDSolverApp {
 	private static final int EXACT_PARAMS_SIZE = 2;
@@ -17,13 +22,8 @@ public class PDSolverApp {
 	private static final int ACTION_INDEX = 1;
 	private static final int FILE_NAME_INDEX = 0;
 	
-	public enum PRINT_ACTIONS { PROGRESS, PROGRESS_STEPPED, 
-								RESULT,   RESULT_STEPPED, 
-								BEST_SO_FAR, BEST_SO_FAR_STEPPED, 
-								END_RESULT };
-	public enum PRINT_INTERFACES { CONSOLE, PANEL, CONSOLEPANEL };
 								
-	public static PRINT_ACTIONS action; 
+	public static PrintAction action; 
 	
 	
 	public static void main(String[] args)
@@ -33,11 +33,9 @@ public class PDSolverApp {
 			PDMatrix mat = PDParser.buildFromFile(args[FILE_NAME_INDEX]);
 			action = getParamsActions(args);
 			Integer approx_minutes = getApproxMinutes(args);
-			
-			System.out.println(getPrintInterface(args));
-			Stack<Cell> cells = PDSolver.Solve(mat, args[ACTION_INDEX], approx_minutes);
+			EventListener itr = getPrintInterface(args, mat);
+			Stack<Cell> cells = PDSolver.solve(mat, args[ACTION_INDEX], approx_minutes, itr);
 			System.out.println("Tama–o: " + (cells.size()));
-			print(cells,mat);
 		}
 		catch (NumberFormatException e) {
 			System.out.println("Invalid Params!");
@@ -61,23 +59,25 @@ public class PDSolverApp {
 		return 0;
 	}
 	
-	private static PRINT_INTERFACES getPrintInterface(String[] args)
-	{
+	private static EventListener getPrintInterface(String[] args, PDMatrix mat) {
+		EventListener el = null; 
 		if ((args[args.length - 1]).equals("-c"))
-			return PRINT_INTERFACES.CONSOLE;
+			el = new ConsoleListener();
 		else if ((args[args.length - 1]).equals("-cp"))
-			return PRINT_INTERFACES.CONSOLEPANEL;
-		else return PRINT_INTERFACES.PANEL;
+			el = new MultipleListener();
+		else el = new PanelListener();
+		el.initialize(mat);
+		return el;
 	}
 	
 
-	private static PRINT_ACTIONS getParamsActions(String[] args) throws InvalidParamsException {
+	private static PrintAction getParamsActions(String[] args) throws InvalidParamsException {
 		
 		if ((args[args.length - 1]).equals("-c") ||
 			(args[args.length - 1]).equals("-cp") 
 				|| args.length == EXACT_PARAMS_SIZE 
 				|| args[ACTION_INDEX].equals("approx") && args.length == APPROX_PARAMS_SIZE)
-			return PRINT_ACTIONS.END_RESULT;
+			return PrintAction.END_RESULT;
 		
 		
 		if (args.length == APPROX_PARAMS_SIZE) {
@@ -114,20 +114,6 @@ public class PDSolverApp {
 			
 	}
 
-	public static void print(Stack<Cell> stack, PDMatrix mat)
-	{
-		stack.pop();
-		Movement m = Cell.startDirection;
-		Point p = m.applyTo(mat.getStartPoint());
-		while(!stack.isEmpty())
-		{
-			Cell c = stack.pop();
-			mat.add(p, c);
-			m = c.NextDir(m);
-			p = m.applyTo(p);
-		}
-		mat.print();
-	}
 	
 	public static void validate(String[] args) throws InvalidParamsException
 	{

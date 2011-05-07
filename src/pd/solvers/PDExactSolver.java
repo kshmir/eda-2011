@@ -1,6 +1,5 @@
 package pd.solvers;
 
-import java.io.IOException;
 import java.util.Stack;
 
 import pd.CellCountMap;
@@ -8,6 +7,7 @@ import pd.PDMatrix;
 import pd.utils.Cell;
 import pd.utils.Movement;
 import pd.utils.Point;
+import front.EventListener;
 
 public class PDExactSolver {
 	private static boolean solved = false;
@@ -15,7 +15,7 @@ public class PDExactSolver {
 	private static int bestC = 0;
 	private static int curC = 0;
 	
-	public static Stack<Cell> Solve(PDMatrix mat)
+	public static Stack<Cell> solve(PDMatrix mat, EventListener itr)
 	{
 		long l1 = System.currentTimeMillis();
 		

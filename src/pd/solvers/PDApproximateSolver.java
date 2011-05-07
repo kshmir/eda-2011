@@ -1,15 +1,13 @@
 package pd.solvers;
 
-import java.io.IOException;
 import java.util.Stack;
 
-import pd.CellCountMap;
 import pd.PDMatrix;
 import pd.utils.Cell;
 import pd.utils.Direction;
 import pd.utils.HeapTree;
-import pd.utils.Movement;
 import pd.utils.Point;
+import front.EventListener;
 
 public class PDApproximateSolver {
 	
@@ -22,7 +20,7 @@ public class PDApproximateSolver {
 				(m.getStartPoint().y - p.y) * (m.getStartPoint().y - p.y))));
 	}
 	
-	public static Stack<Cell> solve(PDMatrix m, Integer seconds)
+	public static Stack<Cell> solve(PDMatrix m, Integer seconds, EventListener i)
 	{
 		HeapTree<Direction> directions = new HeapTree<Direction>();
 		

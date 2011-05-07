@@ -107,50 +107,7 @@ public class PDMatrix {
 		availablePoints--;
 	}
 	
-	public void print()
-	{
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				switch(cells[j][i]) {
-				case CROSS:
-					System.out.print("â”¼");
-					break;
-				case UPDOWN:
-					System.out.print("â”‚");
-					break;
-				case LEFTRIGHT:
-					System.out.print("â”€");
-					break;
-				case LEFTUP:
-					System.out.print("â”˜");
-					break;
-				case DOWNLEFT:
-					System.out.print("â”�");
-					break;
-				case RIGHTDOWN:
-					System.out.print("â”Œ");
-					break;
-				case UPRIGHT:
-					System.out.print("â””");
-					break;
-				case START:
-					System.out.print("*");
-					break;
-				case WALL:
-					System.out.print("â–ˆ");
-					break;
-				case EMPTY:
-					System.out.print(" ");
-					break;
-			}
-				
-				
-				
-				
-			}
-			System.out.println();
-		}
-	}
+	
 
 
 	public boolean contains(Point nextPoint) {
