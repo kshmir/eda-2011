@@ -11,6 +11,7 @@ public class WallCell extends BaseCell{
 	
 
 	public WallCell(int x, int y) {
+		super(x,y);
 		this.x=x;
 		this.y=y;
 		back = new Rectangle2D.Double(x * size, y * size, size, size);
@@ -18,6 +19,7 @@ public class WallCell extends BaseCell{
 	
 	@Override
 	public void paint(Graphics g) {
+		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.gray);
 		g2d.fill(back);

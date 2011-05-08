@@ -5,27 +5,13 @@ import java.util.Stack;
 
 import pd.solvers.PDSolver;
 import pd.utils.Cell;
-import pd.utils.Movement;
-import pd.utils.Point;
 import front.ConsoleListener;
 import front.EventListener;
-import front.PrintAction;
 import front.MultipleListener;
 import front.PanelListener;
+import front.PrintAction;
 
-public class PDSolverApp {
-	private static final int EXACT_PARAMS_SIZE = 2;
-	private static final int APPROX_PARAMS_SIZE = 3;
-	private static final int PROGRESS_EXACT_PARAMS_SIZE = 3;
-	private static final int PROGRESS_APPROX_PARAMS_SIZE = 4;
-	private static final int PARAM_INDEX = 2;
-	private static final int ACTION_INDEX = 1;
-	private static final int FILE_NAME_INDEX = 0;
-	
-								
-	public static PrintAction action; 
-	
-	
+public class PDSolverApp {	
 	public static void main(String[] args)
 	{
 		try {
@@ -33,23 +19,34 @@ public class PDSolverApp {
 			PDMatrix mat = PDParser.buildFromFile(args[FILE_NAME_INDEX]);
 			action = getParamsActions(args);
 			Integer approx_minutes = getApproxMinutes(args);
-			EventListener itr = getPrintInterface(args, mat);
+			EventListener itr = getPrintInterface(args, mat, action);
 			Stack<Cell> cells = PDSolver.solve(mat, args[ACTION_INDEX], approx_minutes, itr);
-			System.out.println("Tama–o: " + (cells.size()));
+			itr.addAll(cells, action);
 		}
 		catch (NumberFormatException e) {
-			System.out.println("Invalid Params!");
+			System.out.println(invalidParamsString);
 		}
 		catch (InvalidParamsException e) {
-			System.out.println("Invalid Params!");
+			System.out.println(invalidParamsString);
 		}
 		catch (IOException e) {
 			System.out.println("Couldn't read input file!");
 		} catch (InvalidFileException e) {
 			System.out.println("Invalid file detected!");
+			System.out.println("Make sure the amount of values given is valid");
+			System.out.println("And also make sure that the height of the map is valid");
+		}
+		catch (StackOverflowError e)
+		{
+			System.out.println("Looks like we ran out of stack space... what a shame!");
+		}
+		catch (OutOfMemoryError e)
+		{
+			System.out.println("Looks like we ran out of heap space... what a shame!");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("If you see this message, then please don't make us recourse");
+			System.err.println(e.toString());
 		}
 	}
 	
@@ -59,23 +56,19 @@ public class PDSolverApp {
 		return 0;
 	}
 	
-	private static EventListener getPrintInterface(String[] args, PDMatrix mat) {
-		EventListener el = null; 
-		if ((args[args.length - 1]).equals("-c"))
-			el = new ConsoleListener();
-		else if ((args[args.length - 1]).equals("-cp"))
-			el = new MultipleListener();
-		else el = new PanelListener();
-		el.initialize(mat);
+	private static EventListener getPrintInterface(String[] args, PDMatrix mat, PrintAction action) {
+		EventListener el = null;
+		if (args[args.length - 1].startsWith("-") && args[args.length - 1].contains("p") && args[args.length - 1].contains("c"))
+			el = new MultipleListener(action, mat, args[args.length - 1].contains("k"));
+		else if (args[args.length - 1].startsWith("-") && args[args.length - 1].contains("c"))
+			el = new ConsoleListener(action, mat, args[args.length - 1].contains("k"));
+		else el = new PanelListener(action, mat, args[args.length - 1].contains("k"));
 		return el;
 	}
 	
-
 	private static PrintAction getParamsActions(String[] args) throws InvalidParamsException {
 		
-		if ((args[args.length - 1]).equals("-c") ||
-			(args[args.length - 1]).equals("-cp") 
-				|| args.length == EXACT_PARAMS_SIZE 
+		if ( args.length == EXACT_PARAMS_SIZE 
 				|| args[ACTION_INDEX].equals("approx") && args.length == APPROX_PARAMS_SIZE)
 			return PrintAction.END_RESULT;
 		
@@ -96,25 +89,19 @@ public class PDSolverApp {
 		                                         : args[PROGRESS_APPROX_PARAMS_SIZE - 1];
 		
 		if (s.equals("progress"))
-			return PRINT_ACTIONS.PROGRESS;
-		else if (s.equals("result"))
-			return PRINT_ACTIONS.RESULT;
-		else if (s.equals("bestsofar"))
-			return PRINT_ACTIONS.BEST_SO_FAR;
-		else if (s.equals("endresult"))
-			return PRINT_ACTIONS.END_RESULT;
-		else if (s.equals("progress-stepped"))
-			return PRINT_ACTIONS.PROGRESS_STEPPED;
-		else if (s.equals("result-stepped"))
-			return PRINT_ACTIONS.RESULT_STEPPED;
-		else if (s.equals("bestsofar-stepped"))
-			return PRINT_ACTIONS.BEST_SO_FAR_STEPPED;
+			return PrintAction.PROGRESS;
+		else if (s.equals("eachresult"))
+			return PrintAction.RESULT;
+		else if (s.equals("betterresult"))
+			return PrintAction.BEST_SO_FAR;
+		else if (s.equals("bestresult"))
+			return PrintAction.END_RESULT;
+		else if (args[args.length - 1].contains("-"))
+			return PrintAction.END_RESULT;
 		else
 			throw new InvalidParamsException();
-			
 	}
 
-	
 	public static void validate(String[] args) throws InvalidParamsException
 	{
 		if (args.length != APPROX_PARAMS_SIZE && args.length != EXACT_PARAMS_SIZE && 
@@ -135,4 +122,29 @@ public class PDSolverApp {
 			throw new InvalidParamsException();
 		}
 	}
+
+	private static final int EXACT_PARAMS_SIZE = 2;
+	private static final int APPROX_PARAMS_SIZE = 3;
+	private static final int PROGRESS_EXACT_PARAMS_SIZE = 3;
+	private static final int PROGRESS_APPROX_PARAMS_SIZE = 4;
+	private static final int PARAM_INDEX = 2;
+	private static final int ACTION_INDEX = 1;
+	private static final int FILE_NAME_INDEX = 0;
+	
+	private static final String invalidParamsString = 
+		"You've put invalid params, the correct formats are:\n" +
+		"(filename) (exact|approx) (minutes for approx) (printmethod) -(c?p?x?){1}\n" +
+		"For example:\n\t" +
+		"map exact progress -cpk\n\t\t" +
+		"Shows each iteration on the panel and the console, stepping by keyboard.\n\t" +
+		"map exact progress -c\n\t\t" +
+		"Shows each iteration on the console, stepping by 100ms step.\n\t" +
+		"map exact eachresult\n\t\t" +
+		"Shows each result found on the panel.\n\t" +
+		"map exact betterresult\n\t\t" +
+		"Shows each best result found so far on the panel.\n\t" +
+		"map exact bestresult\n\t\t" +
+		"Shows THE best result found on the panel.\n\t";
+	
+	public static PrintAction action;
 }

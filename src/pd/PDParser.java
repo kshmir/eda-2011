@@ -37,7 +37,7 @@ public class PDParser {
 		for (int i = 0; i < rows; i++) {
 			line = reader.readLine();
 			
-			int len = (line.length() > 6) ? 6 : line.length();
+			int len = (line.length() > cols) ? cols : line.length();
 			for (int j = 0; j < len; j++) {
 				char c = line.charAt(j);
 				if (startSet && (c == 'N' || c == 'S' || c == 'E' || c == 'W'))

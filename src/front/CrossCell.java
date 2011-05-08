@@ -12,8 +12,7 @@ public class CrossCell extends BaseCell{
 	private Rectangle2D.Double horizontal;
 
 	public CrossCell(int x, int y) {
-		this.x=x;
-		this.y=y;
+		super(x,y);
 		back = new Rectangle2D.Double(x * size, y * size, size, size);
 		horizontal = new Rectangle2D.Double(x * size, y * size + size / 3,size, size / 3);
 		vertical = new Rectangle2D.Double(x * size + size / 3, y * size,size / 3, size);
@@ -21,6 +20,7 @@ public class CrossCell extends BaseCell{
 	
 	@Override
 	public void paint(Graphics g) {
+		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.black);
 		g2d.draw(back);

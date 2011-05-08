@@ -1,8 +1,8 @@
 package front;
 
 public enum PrintAction {
-	PROGRESS, PROGRESS_STEPPED, 
-	RESULT,   RESULT_STEPPED, 
-	BEST_SO_FAR, BEST_SO_FAR_STEPPED, 
+	PROGRESS, 
+	RESULT, 
+	BEST_SO_FAR, 
 	END_RESULT
 }

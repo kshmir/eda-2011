@@ -11,6 +11,7 @@ public class LeftRightCell extends BaseCell{
 	private Rectangle2D.Double horizontal;
 
 	public LeftRightCell(int x, int y) {
+		super(x,y);
 		this.x=x;
 		this.y=y;
 		back = new Rectangle2D.Double(x * size, y * size, size, size);
@@ -20,6 +21,7 @@ public class LeftRightCell extends BaseCell{
 	
 	@Override
 	public void paint(Graphics g) {
+		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.black);
 		g2d.draw(back);

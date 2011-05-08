@@ -1,44 +1,80 @@
 package front;
 
+import java.util.Stack;
+
 import pd.PDMatrix;
-import pd.PDSolverApp;
 import pd.utils.Cell;
+import pd.utils.Movement;
 import pd.utils.Point;
 
 public class ConsoleListener extends EventListener {
 
+	private PDMatrix start_mat;
+	
+	private PDMatrix original_mat;
 
-	public ConsoleListener(PrintAction action, PDMatrix mat)
+	public ConsoleListener(PrintAction action, PDMatrix mat, boolean stepped)
 	{
-		super(action,mat);
+		super(action,mat,stepped);
+		start_mat = mat.clone();
+		this.mat = mat.clone();
+		this.original_mat = mat;
 	}
 	
 	
 	@Override
 	public boolean addCell(Cell c, int x, int y, PrintAction action) {
+		return addCell(c,x,y,action,false);
+	}
+	
+	@Override
+	public boolean addCell(Cell c, int x, int y, PrintAction action, boolean printAllOnOnce) {
 		// Yes indeed, the cake is a lie
-		if (super.addCell(c,x,y,action))
-			printMat();
+		if (action == this.action)
+			printMat(original_mat);
 		else
 			return false;
-		return true;
+		return super.addCell(c,x,y,action,printAllOnOnce);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void addAll(Stack<Cell> stack, PrintAction action) {
+		if (action == this.action)
+		{
+			stack = (Stack<Cell>)stack.clone();
+			stack.pop();
+			Movement m = Cell.startDirection;
+			Point p = m.applyTo(mat.getStartPoint());
+			while (!stack.isEmpty()) {
+				Cell c = stack.pop();
+				mat.add(p, c);
+				m = c.NextDir(m);
+				p = m.applyTo(p);
+			}
+			printMat(mat);
+			mat = start_mat.clone();
+			this.printReport();
+		}
+		makeDelayOrAskStdin(action);
+	};
 
 	@Override
 	public boolean removeCell(int x, int y, PrintAction action) {
 		// Yes indeed, the cake is a lie
-		if (super.removeCell(x,y,action))
-			printMat();
+		if (action == this.action)
+			printMat(original_mat);
 		else
 			return false;
-		return true;
+		return super.removeCell(x,y,action);
 	}
 	
-	private void printMat()
+	private void printMat(PDMatrix mat)
 	{
+		long l1 = System.currentTimeMillis();
 		for (int i = 0; i < mat.getRows(); i++) {
 			for (int j = 0; j < mat.getCols(); j++) {
-				switch(mat.get(new Point(i,j))) {
+				switch(mat.get(new Point(j,i))) {
 					case CROSS:
 						System.out.print("┼");
 						break;
@@ -73,6 +109,7 @@ public class ConsoleListener extends EventListener {
 			}
 			System.out.println();
 		}
+		totalWaitTime += System.currentTimeMillis() - l1;
 	}
 	
 

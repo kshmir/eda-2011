@@ -6,12 +6,25 @@ import pd.utils.Movement;
 import pd.utils.Point;
 
 
-public class PDMatrix {
+public class PDMatrix implements Cloneable {
  
 	private Cell[][] cells;
 	private int rows;
 	private int cols;
 
+	@Override
+	public PDMatrix clone() 
+	{
+		PDMatrix n = new PDMatrix(rows,cols);
+		for (int i = 0; i < cols; i++) {
+			for (int j = 0; j < rows; j++) {
+				n.add(new Point(i,j),this.get(new Point(i,j)));
+			}
+		}
+		n.startPoint = this.startPoint;
+		return n;
+	}
+	
 	public int availablePoints = 0;
 	
 	private CellCountMap map;
@@ -27,6 +40,7 @@ public class PDMatrix {
 			}
 		}
 		availablePoints = rows * cols;
+		
 		map = new CellCountMap();
 	}
 	
