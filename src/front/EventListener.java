@@ -42,6 +42,7 @@ public abstract class EventListener {
 				System.out.println("Current statistics:");
 			if (action != PrintAction.PROGRESS && action != PrintAction.RESULT)
 			{
+				// This times are completely approximate by the listeners, they are not a real proof of speed, except when using ENDRESULT
 				System.out.println("\tApprox. Total time:" + getTotalTime());
 				System.out.println("\tApprox. Total wait time:" + getTotalWaitTime());
 				System.out.println("\tApprox. Total computing time:" + getTotalComputeTime());
