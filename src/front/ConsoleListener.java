@@ -1,5 +1,7 @@
 package front;
 
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Stack;
 
 import pd.PDMatrix;
@@ -19,6 +21,12 @@ public class ConsoleListener extends EventListener {
 		start_mat = mat.clone();
 		this.mat = mat.clone();
 		this.original_mat = mat;
+		try {
+			System.setOut(new PrintStream(System.out, true, "utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	
