@@ -5,6 +5,7 @@ import pd.utils.Cell;
 public class CellCountMap {
 	private int[] counts;
 	private int totalCount = 0;
+	public int cellCount = 0;
 	
 	public CellCountMap() {
 		counts = new int[7];

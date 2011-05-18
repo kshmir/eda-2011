@@ -4,6 +4,11 @@ public class HeapTree<T extends Comparable<? super T>>{
 
 	private Node<T> root;
 	
+	public void clear()
+	{
+		root = null;
+	}
+	
 	public boolean isEmpty()
 	{
 		return root == null;

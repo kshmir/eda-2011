@@ -59,10 +59,10 @@ public class PDSolverApp {
 	private static EventListener getPrintInterface(String[] args, PDMatrix mat, PrintAction action) {
 		EventListener el = null;
 		if (args[args.length - 1].startsWith("-") && args[args.length - 1].contains("p") && args[args.length - 1].contains("c"))
-			el = new MultipleListener(action, mat, args[args.length - 1].contains("k"));
+			el = new MultipleListener(action, mat, args[args.length - 1].contains("k"),args[args.length - 1].contains("r"));
 		else if (args[args.length - 1].startsWith("-") && args[args.length - 1].contains("c"))
-			el = new ConsoleListener(action, mat, args[args.length - 1].contains("k"));
-		else el = new PanelListener(action, mat, args[args.length - 1].contains("k"));
+			el = new ConsoleListener(action, mat, args[args.length - 1].contains("k"),args[args.length - 1].contains("r"));
+		else el = new PanelListener(action, mat, args[args.length - 1].contains("k"),args[args.length - 1].contains("r"));
 		return el;
 	}
 	

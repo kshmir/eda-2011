@@ -24,9 +24,9 @@ public class PanelListener extends EventListener {
 			super.printReport();
 	}
 	
-	public PanelListener(PrintAction action, PDMatrix p, boolean kb)
+	public PanelListener(PrintAction action, PDMatrix p, boolean kb, boolean repeats)
 	{
-		super(action,p,kb);
+		super(action,p,kb,repeats);
 		bg = new BackGround(p.getRows(),p.getCols());
 		frame = WindowUtilities.openInJFrame(bg, bg.getCols()
 				* BackGround.size + 15, bg.getRows() * BackGround.size + 39,

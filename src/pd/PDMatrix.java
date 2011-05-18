@@ -11,6 +11,8 @@ public class PDMatrix implements Cloneable {
 	private Cell[][] cells;
 	private int rows;
 	private int cols;
+	
+	public int maxPathLen = 0;
 
 	@Override
 	public PDMatrix clone() 

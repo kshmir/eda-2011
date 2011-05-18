@@ -22,12 +22,15 @@ public abstract class EventListener {
 	protected long totalWaitTime;
 	private long bestLength;
 	private long iterations;
+	private long sameLengthFound = 0;
+	public boolean repeats = false;
 	
 	
-	protected EventListener(PrintAction act, PDMatrix p, boolean stepped)
+	protected EventListener(PrintAction act, PDMatrix p, boolean stepped, boolean repeats)
 	{
 		action = act;
 		mat = p;
+		this.repeats = repeats;
 		this.stepped = stepped;
 	}
 	
@@ -48,6 +51,8 @@ public abstract class EventListener {
 				System.out.println("\tApprox. Total computing time:" + getTotalComputeTime());
 			}
 			System.out.println("\tBest length found:" + bestLength);
+			if (repeats)
+				System.out.println("\tNumber of times found:" + sameLengthFound);
 			System.out.println("\tTotal iterations:" + getIterations());
 			
 		}
@@ -172,5 +177,13 @@ public abstract class EventListener {
 			this.printReport();
 		}
 		makeDelayOrAskStdin(action);
+	}
+
+	public void setSameLengthFound(long sameLengthFound) {
+		this.sameLengthFound = sameLengthFound;
+	}
+
+	public long getSameLengthFound() {
+		return sameLengthFound;
 	}
 }
