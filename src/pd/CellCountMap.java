@@ -2,13 +2,13 @@ package pd;
 
 import pd.utils.Cell;
 
-public class CellCountMap {
-	private int[] counts;
-	private int totalCount = 0;
-	public int cellCount = 0;
+public class CellCountMap implements Cloneable {
+	private char[] counts;
+	private char totalCount = 0;
+	public char cellCount = 0;
 	
 	public CellCountMap() {
-		counts = new int[7];
+		counts = new char[7];
 	}
 	public int totalPiecesLeft() {
 		return totalCount;
@@ -23,7 +23,7 @@ public class CellCountMap {
 		setTotalPiecesLeft(cell.ordinal(), n);
 	}
 	public void setTotalPiecesLeft(int index, int n) {
-		counts[index] = n;
+		counts[index] = (char)n;
 		totalCount += n;
 	}
 	public void decreasePiecesLeft(Cell t) {
@@ -39,5 +39,17 @@ public class CellCountMap {
 	public void incrementPiecesLeft(int index) {
 		counts[index]++;
 		totalCount++;
+	}
+	
+	public CellCountMap clone()
+	{
+		CellCountMap r = new CellCountMap();
+		for (int i = 0; i < this.counts.length; i++) {
+			r.counts[i] = this.counts[i];
+		}
+		r.counts = this.counts.clone();
+		r.totalCount = this.totalCount;
+		r.cellCount = this.cellCount;
+		return r;
 	}
 }

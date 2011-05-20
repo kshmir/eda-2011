@@ -79,7 +79,7 @@ public class PDExactSolver {
 				listener.setBestLength(bestC = curC);
 				listener.addAll(bestStack, PrintAction.BEST_SO_FAR);
 								
-				if (mat.availablePoints == 0 || curC - 1 == mat.maxPathLen)
+				if (curC - 1 == mat.maxPathLen)
 				{
 					// If there are no more crosses and points to add, then it's a cut.
 					// If there are no more pieces then it's a cut.
@@ -103,9 +103,7 @@ public class PDExactSolver {
 		if (currentCell == Cell.CROSS)
 		{
 			curC++;
-			cellCount.decreasePiecesLeft(Cell.CROSS);
 			solve(mat, nextPoint, currentMovement);
-			cellCount.incrementPiecesLeft(Cell.CROSS);
 			curC--;
 		}
 		else

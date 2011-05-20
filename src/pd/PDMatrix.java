@@ -52,13 +52,13 @@ public class PDMatrix implements Cloneable {
 		return map;
 	}
 	
-	public Cell[] siblings (Point p){
+	public Cell[] siblings (Point p)	{
 		if (p == null || p.x >= cols || p.y >= rows)
 			return null;
 		
 		Cell[] sibs = new Cell[4];
 		Movement e = Movement.UP;
-		for (int i = 0 ;i<4;i++){
+		for (int i = 0 ;i<4;i++)	{
 			sibs[i]=get(p.translate(e.versor()));
 			e=Movement.convertTo(i+1);
 		}
@@ -134,6 +134,51 @@ public class PDMatrix implements Cloneable {
 	}
 	public int getCols(){
 		return cols;
+	}
+	
+	public void print()
+	{
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				switch(cells[j][i]) {
+				case CROSS:
+					System.out.print("┼");
+					break;
+				case UPDOWN:
+					System.out.print("│");
+					break;
+				case LEFTRIGHT:
+					System.out.print("─");
+					break;
+				case LEFTUP:
+					System.out.print("┘");
+					break;
+				case DOWNLEFT:
+					System.out.print("┐");
+					break;
+				case RIGHTDOWN:
+					System.out.print("┌");
+					break;
+				case UPRIGHT:
+					System.out.print("└");
+					break;
+				case START:
+					System.out.print("*");
+					break;
+				case WALL:
+					System.out.print("█");
+					break;
+				case EMPTY:
+					System.out.print(" ");
+					break;
+			}
+				
+				
+				
+				
+			}
+			System.out.println();
+		}
 	}
 	
 }

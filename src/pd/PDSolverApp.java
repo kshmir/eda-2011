@@ -46,7 +46,7 @@ public class PDSolverApp {
 		}
 		catch (Exception e) {
 			System.out.println("If you see this message, then please don't make us recourse");
-			System.err.println(e.toString());
+			e.printStackTrace();
 		}
 	}
 	

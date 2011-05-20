@@ -2,7 +2,7 @@ package pd.utils;
 
 
 /**
- * @author Murci�lagos
+ * @author MurciÈlagos
  * This enumerator is used for a fast recognition of the direction received
  */
 public enum Cell {
@@ -15,7 +15,7 @@ public enum Cell {
 			Cell.EMPTY, Cell.START };
 
 	/**
-	 * @author Murci�lagos
+	 * @author MurciÈlagos
 	 * This method is used to convert an ordinal into its corresponing Cell enumerator.
 	 */
 	public static Cell convertTo(int value) {
@@ -36,7 +36,7 @@ public enum Cell {
 	}
 	
 	/**
-	 * @author Murci�lagos
+	 * @author MurciÈlagos
 	 * This method return Which Cells Entities are compatibles with each one.
 	 * This method was created to improve the DFS efficiency.
 	 */
@@ -87,7 +87,7 @@ public enum Cell {
 	}
 
 	/**
-	 * @author Murci�lagos
+	 * @author MurciÈlagos
 	 * This method simulates de behaiviour of a Cell.
 	 */
 	public Movement NextDir(Movement e) {
@@ -135,4 +135,30 @@ public enum Cell {
 		return Movement.NONE;
 	}
 
+	@Override
+	public String toString() {
+		switch(this) {
+		case CROSS:
+			return "┼";
+		case UPDOWN:
+			return "│";
+		case LEFTRIGHT:
+			return "─";
+		case LEFTUP:
+			return "┘";
+		case DOWNLEFT:
+			return "┐";
+		case RIGHTDOWN:
+			return "┌";
+		case UPRIGHT:
+			return "└";
+		case START:
+			return "*";
+		case WALL:
+			return "█";
+		case EMPTY:
+			return " ";
+		}
+		return "█";
+	}
 }

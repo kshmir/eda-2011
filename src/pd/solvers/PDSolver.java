@@ -16,7 +16,7 @@ public class PDSolver {
 		if (method.equals("exact"))
 			return new PDExactSolver(i).solve(mat);
 		else if (method.equals("approx"))
-			return PDApproximateSolver.solve(mat, seconds,i);
+			return new PDApproximateSolver(mat, seconds,i).solve();
 		return null;
 	}	
 }

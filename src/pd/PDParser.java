@@ -54,7 +54,7 @@ public class PDParser {
 		CellCountMap map = matriz.getCellCountMap();
 		for (int i = 0; i < 7; i++) {
 			try	{
-				map.setTotalPiecesLeft(i, Integer.parseInt(reader.readLine().trim()));
+				map.setTotalPiecesLeft(i, (char)Integer.parseInt(reader.readLine().trim()));
 				matriz.maxPathLen += map.totalPiecesLeft(i);
 				if (i == 6)
 					matriz.maxPathLen += map.totalPiecesLeft(i);
