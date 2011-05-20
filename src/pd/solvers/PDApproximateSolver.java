@@ -61,37 +61,42 @@ public class PDApproximateSolver {
 		getSolvePaths();
 		int validPaths = 0;
 		
-	
+		TreeSet<HeuristicSolvePath> secondaryPaths = new TreeSet<HeuristicSolvePath>(
+				new Comparator<HeuristicSolvePath>() {
+					@Override
+					public int compare(HeuristicSolvePath o1, HeuristicSolvePath o2) {
+						return ((o2.bestC - o1.bestC) == 0) ? 1 : (o2.bestC - o1.bestC);
+					}
+				});
 		
 		TreeSet<HeuristicSolvePath> paths = new TreeSet<HeuristicSolvePath>(new Comparator<HeuristicSolvePath>() {
 			@Override
 			public int compare(HeuristicSolvePath o1, HeuristicSolvePath o2) {
-				return (o2.bestC - o1.bestC);
+				return ((o2.bestC - o1.bestC) == 0) ? 1 : (o2.bestC - o1.bestC);
 			}
 		});
 		for (HeuristicSolvePath solvePath : solvePaths) {
 			Stack<Cell> stck = solvePath.aStar();
 			if (stck != null) {
-				validPaths++;
 				if (solvePath.bestC > solSize) {
 					solSize = solvePath.bestC;
 					bestSolution = stck;
 					listener.setBestLength(solSize + 1);
 				}
 				paths.add(solvePath);
+				validPaths++;
 			}
 		}
-		
 		for (HeuristicSolvePath solvePath : paths) {
 			Stack<Cell> stck = solvePath.aStar();
 			if (stck != null) {
 				solvePath.rebuildHeap();
 			}
 		}
-		for (int i = 0; i < 10; i++) {
+		while (true) {
 			for (HeuristicSolvePath solvePath : paths) {
 				if (solvePath.bestStack != null) {
-					Stack<Cell> stck = solvePath.explore((seconds * 100) / validPaths);
+					Stack<Cell> stck = solvePath.explore((seconds * 50) / validPaths);
 					if (stck != null) {
 						if (solvePath.bestC > solSize) {
 							solSize = solvePath.bestC;
@@ -102,12 +107,40 @@ public class PDApproximateSolver {
 				}
 			}
 			
-			if (validPaths > 4)
+			TreeSet<HeuristicSolvePath> pathsRebuilder = new TreeSet<HeuristicSolvePath>(
+					new Comparator<HeuristicSolvePath>() {
+						@Override
+						public int compare(HeuristicSolvePath o1, HeuristicSolvePath o2) {
+							return ((o2.bestC - o1.bestC) == 0) ? 1 : (o2.bestC - o1.bestC);
+						}
+					});
+			
+			if (listener.getTotalComputeTime() > seconds * 1000)
+				break;
+			
+			while (paths.size() > validPaths && validPaths >= 2) {
+				secondaryPaths.add(paths.pollLast());
+			}
+			
+			while (paths.size() > 0) {
+				HeuristicSolvePath p = paths.pollFirst();
+				if (p.heap.size() > 0)
+					pathsRebuilder.add(p);
+				else if (secondaryPaths.size() > 0)
+					pathsRebuilder.add(secondaryPaths.pollFirst());
+			}
+			
+			if (pathsRebuilder.size() == 0)
+				break;
+			
+			paths = pathsRebuilder;
+			
+			System.out.println(secondaryPaths.size() + " " + pathsRebuilder.size());
+			
+			if (validPaths >= 2)
 				validPaths /= 2;
-			while (paths.size() > validPaths && validPaths > 4)
-				paths.pollLast();
+			
 		}
-	
 		
 		listener.setEnd();
 		listener.setBestLength(solSize + 1);
@@ -166,7 +199,7 @@ public class PDApproximateSolver {
 				n.countMap.decreasePiecesLeft(node);
 			else if (node == Cell.CROSS && n.countMap.totalPiecesLeft(Cell.CROSS) == 0)
 				n.crosses = (char) (parent.crosses + 1);
-				
+			
 			return n;
 		}
 	}
@@ -178,7 +211,8 @@ public class PDApproximateSolver {
 			PriorityQueue<CellLocation> new_heap = new PriorityQueue<CellLocation>(11, new Comparator<CellLocation>() {
 				@Override
 				public int compare(CellLocation o1, CellLocation o2) {
-					return (int) ((o2.length - o1.length) * 1.5 + (o2.crosses - o1.crosses) * 10);
+					return (int) ((o2.length - o1.length) * 1.5 + (o2.crosses - o1.crosses)
+							* Math.max(o2.length, (double) o1.length) / Math.min(o2.length, (double) o1.length));
 				}
 				
 			});
@@ -271,15 +305,8 @@ public class PDApproximateSolver {
 				Movement currentMovement = current.movement;
 				Point nextPoint = currentMovement.applyTo(current.location);
 				
-				if (System.currentTimeMillis() - start > miliseconds) {
-					System.out.println("heap: " + heap.size() + " its : " + listener.getIterations() + " best: "
-							+ bestC + " cur: " + (int)current.length);
+				if (System.currentTimeMillis() - start > miliseconds || listener.getTotalComputeTime() > seconds * 1000) {
 					break;
-				}
-				
-				if (listener.getIterations() % 1000000 == 0) {
-					System.out.println("heap: " + heap.size() + " its : " + listener.getIterations() + " best: "
-							+ bestC + " cur: " + (int)current.length);
 				}
 				
 				if (currentMovement == Movement.NONE || !m.contains(nextPoint))
@@ -290,7 +317,8 @@ public class PDApproximateSolver {
 					// If we're required to print each result then we send it.
 					// We compare here in order to avoid making a
 					// rebuildMovements on each result.
-					//listener.addAll(rebuildMovements(current), listener.action);
+					// listener.addAll(rebuildMovements(current),
+					// listener.action);
 					if (current.length > bestC) {
 						bestStack = rebuildMovements(current);
 						listener.addAll(bestStack, PrintAction.BEST_SO_FAR);
