@@ -22,7 +22,7 @@ public class PDApproximateSolver {
 	protected static PDMatrix				m;
 	private EventListener					listener;
 	private int								seconds;
-
+	private boolean							solved;
 	
 	private void getSolvePaths() {
 		for (int i = 0; i < m.getCols(); i++) {
@@ -215,7 +215,7 @@ public class PDApproximateSolver {
 																return (int) ((o1 - o2));
 															}
 														});
-		private ArrayList<Stack<CellLocation>>	stacks	= new ArrayList<Stack<CellLocation>>();
+		private ArrayList<Stack<CellLocation>>	stacks	= new ArrayList<Stack<CellLocation>>(100);
 		
 		private void setElement(Integer d, CellLocation cell) {
 			while (stacks.size() - 1 < d)
@@ -243,8 +243,23 @@ public class PDApproximateSolver {
 					return (int) ((o2 - o1));
 				}
 			});
-			while (!heap.isEmpty())
-				new_heap.add(heap.poll());
+			ArrayList<Stack<CellLocation>>	new_stacks	= new ArrayList<Stack<CellLocation>>();
+			while(!stacks.isEmpty())
+			{
+				Stack<CellLocation> cells = stacks.remove(stacks.size() - 1);
+				if (cells != null)
+				{
+					for (CellLocation cellLocation : cells) {
+						while (new_stacks.size() - 1 < cellLocation.length)
+							new_stacks.add(null);
+						if (new_stacks.get(cellLocation.length) == null)
+							new_stacks.set(cellLocation.length, new Stack<CellLocation>());
+						new_stacks.get(cellLocation.length).push(cellLocation);
+						new_heap.add((int) cellLocation.length);
+					}
+				}
+			}
+			stacks = new_stacks;
 			heap = new_heap;
 		}
 		
