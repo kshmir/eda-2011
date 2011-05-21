@@ -22,7 +22,7 @@ public class PDApproximateSolver {
 	protected static PDMatrix				m;
 	private EventListener					listener;
 	private int								seconds;
-	private boolean							solved;
+
 	
 	private void getSolvePaths() {
 		for (int i = 0; i < m.getCols(); i++) {
@@ -162,6 +162,10 @@ public class PDApproximateSolver {
 					- distanceFromPoints(p.location, m.getStartPoint().translate(Cell.startDirection.versor()));
 		}
 		
+		public int distTostart() {
+			return distanceFromPoints(this.location, m.getStartPoint().translate(Cell.startDirection.versor()));
+		}
+		
 		public static int distanceFromPoints(Point p, Point p2) {
 			return (int) Math.sqrt((p.x - p2.x) * (p.x - p2.x) + (p.y - p2.y) * (p.y - p2.y));
 		}
@@ -205,16 +209,39 @@ public class PDApproximateSolver {
 	}
 	
 	public class HeuristicSolvePath {
-		private PriorityQueue<CellLocation>	heap	= new PriorityQueue<CellLocation>();
+		private PriorityQueue<Integer>			heap	= new PriorityQueue<Integer>(11, new Comparator<Integer>() {
+															@Override
+															public int compare(Integer o1, Integer o2) {
+																return (int) ((o1 - o2));
+															}
+														});
+		private ArrayList<Stack<CellLocation>>	stacks	= new ArrayList<Stack<CellLocation>>();
+		
+		private void setElement(Integer d, CellLocation cell) {
+			while (stacks.size() - 1 < d)
+				stacks.add(null);
+			if (stacks.get(d) == null)
+				stacks.set(d, new Stack<CellLocation>());
+			stacks.get(d).push(cell);
+		}
+		
+		private CellLocation getElement(Integer d) {
+			if (stacks.get(d) != null && !stacks.get(d).isEmpty()) {
+				if (stacks.size() == 1)
+					heap.poll();
+				return stacks.get(d).pop();
+			} else {
+				heap.poll();
+				return null;
+			}
+		}
 		
 		private void rebuildHeap() {
-			PriorityQueue<CellLocation> new_heap = new PriorityQueue<CellLocation>(11, new Comparator<CellLocation>() {
+			PriorityQueue<Integer> new_heap = new PriorityQueue<Integer>(11, new Comparator<Integer>() {
 				@Override
-				public int compare(CellLocation o1, CellLocation o2) {
-					return (int) ((o2.length - o1.length) * 1.5 + (o2.crosses - o1.crosses)
-							* Math.max(o2.length, (double) o1.length) / Math.min(o2.length, (double) o1.length));
+				public int compare(Integer o1, Integer o2) {
+					return (int) ((o2 - o1));
 				}
-				
 			});
 			while (!heap.isEmpty())
 				new_heap.add(heap.poll());
@@ -242,13 +269,18 @@ public class PDApproximateSolver {
 			long startTime = System.currentTimeMillis();
 			for (int i : solveMovement.getCompatible()) {
 				if (i != 6) {
-					heap.add(new CellLocation(solvePoint, solveMovement, m.getCellCountMap().clone(), Cell.cells[i]));
+					CellLocation l = new CellLocation(solvePoint, solveMovement, m.getCellCountMap().clone(),
+							Cell.cells[i]);
+					setElement(l.distTostart(), l);
+					heap.add(l.distTostart());
 				}
 			}
 			
 			while (!heap.isEmpty()) {
 				listener.addIteration();
-				CellLocation current = heap.poll();
+				CellLocation current = getElement(heap.peek());
+				if (current == null)
+					continue;
 				Movement currentMovement = current.movement;
 				Point nextPoint = currentMovement.applyTo(current.location);
 				
@@ -275,7 +307,9 @@ public class PDApproximateSolver {
 				
 				Cell hist = current.historyPoints(nextPoint);
 				if (hist == Cell.CROSS) {
-					heap.add(CellLocation.fromCell(current, Cell.CROSS));
+					CellLocation l = CellLocation.fromCell(current, Cell.CROSS);
+					setElement(l.distTostart(), l);
+					heap.add(l.distTostart());
 				} else {
 					if (m.get(nextPoint) == Cell.EMPTY && hist == null) {
 						int[] moves = current.cell.getCompatibles(currentMovement);
@@ -285,8 +319,9 @@ public class PDApproximateSolver {
 									&& (i != 6 || ((current.countMap.totalPiecesLeft(Cell.UPDOWN.ordinal()) == 0 && (currentMovement == Movement.UP || currentMovement == Movement.DOWN))
 											|| (current.countMap.totalPiecesLeft(Cell.LEFTRIGHT.ordinal()) == 0 && (currentMovement == Movement.LEFT || currentMovement == Movement.RIGHT)) || valid(
 											nextPoint, current)))) {
-								
-								heap.add(CellLocation.fromCell(current, Cell.cells[i]));
+								CellLocation l = CellLocation.fromCell(current, Cell.cells[i]);
+								setElement(l.distTostart(), l);
+								heap.add(l.distTostart());
 							}
 						}
 					}
@@ -301,7 +336,9 @@ public class PDApproximateSolver {
 			while (!heap.isEmpty()) {
 				listener.addIteration();
 				
-				CellLocation current = heap.poll();
+				CellLocation current = getElement(heap.peek());
+				if (current == null)
+					continue;
 				Movement currentMovement = current.movement;
 				Point nextPoint = currentMovement.applyTo(current.location);
 				
@@ -328,7 +365,9 @@ public class PDApproximateSolver {
 				
 				Cell hist = current.historyPoints(nextPoint);
 				if (hist == Cell.CROSS) {
-					heap.add(CellLocation.fromCell(current, Cell.CROSS));
+					CellLocation l = CellLocation.fromCell(current, Cell.CROSS);
+					setElement((int) l.length, l);
+					heap.add((int) l.length);
 				} else {
 					if (m.get(nextPoint) == Cell.EMPTY && hist == null) {
 						int[] moves = current.cell.getCompatibles(currentMovement);
@@ -338,8 +377,9 @@ public class PDApproximateSolver {
 									&& (i != 6 || ((current.countMap.totalPiecesLeft(Cell.UPDOWN.ordinal()) == 0 && (currentMovement == Movement.UP || currentMovement == Movement.DOWN))
 											|| (current.countMap.totalPiecesLeft(Cell.LEFTRIGHT.ordinal()) == 0 && (currentMovement == Movement.LEFT || currentMovement == Movement.RIGHT)) || valid(
 											nextPoint, current)))) {
-								
-								heap.add(CellLocation.fromCell(current, Cell.cells[i]));
+								CellLocation l = CellLocation.fromCell(current, Cell.cells[i]);
+								setElement((int) l.length, l);
+								heap.add((int) l.length);
 							}
 						}
 					}
