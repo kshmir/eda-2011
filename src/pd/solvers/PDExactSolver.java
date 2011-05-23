@@ -143,7 +143,7 @@ public class PDExactSolver {
 							 		 (cellCount.totalPiecesLeft(Cell.LEFTRIGHT.ordinal()) == 0 
 									 && (currentMovement == Movement.LEFT || currentMovement == Movement.RIGHT))
 							 ||
-							 		 (valid(mat.siblings(nextPoint)))
+							 		 (valid(mat.siblings(nextPoint), nextPoint))
 							 )
 					)
 				)
@@ -162,6 +162,9 @@ public class PDExactSolver {
 					
 					// Recursion step.
 					solve(mat, nextPoint, m);
+					
+					if (crossPoint != null && crossPoint.equals(nextPoint))
+						crossPoint = null;
 					
 					// Rollback of everything.
 					listener.removeCell(nextPoint.x, nextPoint.y, PrintAction.PROGRESS);
@@ -191,17 +194,23 @@ public class PDExactSolver {
 		return cell;
 	}
 	
+	private Point crossPoint;
+	
 	/**
 	 * Tells whether a sibling vector is valid or not for a cross cell.
+	 * This can reduce dramatically the amount of iterations for a same path. 
 	 */
-	private boolean valid(Cell[] valid)
+	private boolean valid(Cell[] siblings, Point p)
 	{
 		int c = 0;
-		for (int i = 0; i < valid.length; i++) {
-			if (valid[i] == Cell.EMPTY)
+		for (int i = 0; i < siblings.length; i++) {
+			if (siblings[i] == Cell.EMPTY)
 				c++;
-			if (valid[i] == null)
+			if (siblings[i] == null && crossPoint != null)
+			{
+				crossPoint = p;
 				return true;
+			}
 		}
 		return c == 3;
 	}

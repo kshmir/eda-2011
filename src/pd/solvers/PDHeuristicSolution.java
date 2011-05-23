@@ -12,15 +12,23 @@ import pd.utils.Point;
 import front.EventListener;
 import front.PrintAction;
 
+/**
+ * Finds and improves the solution in the given point.
+ */
 public class PDHeuristicSolution {
+	
+	// Heap storing the distances (or the length of the path) for each stack of nodes.
 	public PriorityQueue<Integer>		heap	= new PriorityQueue<Integer>(11, new Comparator<Integer>() {
 													@Override
 													public int compare(Integer o1, Integer o2) {
 														return (int) ((o1 - o2));
 													}
 												});
+	// We use an arraylist of stacks to store the elements, since there might be lots of repeated elements.
+	// By doing this we achieved a nice boost of about 30% speed. Since the access to the heap was a lot faster!
 	public ArrayList<Stack<PDCellNode>>	stacks	= new ArrayList<Stack<PDCellNode>>(100);
 	
+	// Sets an element in the array/heap.
 	private void setElement(Integer d, PDCellNode cell) {
 		if (d < 0)
 			d *= -1;
@@ -31,7 +39,8 @@ public class PDHeuristicSolution {
 		
 		stacks.get(d).push(cell);
 	}
-	
+
+	// Gets an element in the array/heap.
 	private PDCellNode getElement(Integer d) {
 		if (d < 0)
 			d *= -1;
@@ -45,6 +54,7 @@ public class PDHeuristicSolution {
 		}
 	}
 	
+	// Rebuilds the "heap".
 	public void rebuildHeap() {
 		PriorityQueue<Integer> new_heap = new PriorityQueue<Integer>(11, new Comparator<Integer>() {
 			@Override
@@ -70,12 +80,20 @@ public class PDHeuristicSolution {
 		heap = new_heap;
 	}
 	
+	// Point from which we start (find a solution)
 	private Point			startPoint;
+	// Movement of the start point.
 	private Movement		startMovement;
+	// Point from which we start actually moving.
 	private Point			solvePoint;
+	// Movement with with we start.
 	private Movement		solveMovement;
+	// Solution
 	public Stack<Cell>		bestStack;
+	// Solution length
 	public int				bestC;
+	
+	// Needed in the algorithms.
 	private PDMatrix		m;
 	private EventListener	listener;
 	private int				seconds;
@@ -91,61 +109,59 @@ public class PDHeuristicSolution {
 		this.seconds = seconds;
 	}
 	
-	int	c			= 0;
-	int	bestDist	= 100000;
-	
 	public Stack<Cell> aStar() {
 		long startTime = System.currentTimeMillis();
+		// Add the possible movements to the heap.
 		for (int i : solveMovement.getCompatible()) {
-			PDCellNode l = new PDCellNode(solvePoint, Cell.cells[i].NextDir(solveMovement), m.getCellCountMap().clone(),
-					Cell.cells[i]);
+			PDCellNode l = new PDCellNode(solvePoint, Cell.cells[i].NextDir(solveMovement),
+					m.getCellCountMap().clone(), Cell.cells[i]);
 			l.countMap.decreasePiecesLeft(i);
 			setElement(l.distTostart(), l);
 			heap.add(l.distTostart());
 		}
-		
+		// It empties if no path's found.
 		while (!heap.isEmpty()) {
 			listener.addIteration();
 			PDCellNode current = getElement(heap.peek());
-			if (current == null) {
-				
+			if (current == null)
 				continue;
-			}
 			Movement currentMovement = current.movement;
 			Point nextPoint = currentMovement.applyTo(current.location);
 			
+			// We cut if we take too long or if it's time to leave.
 			if (System.currentTimeMillis() - startTime > 10 || listener.getTotalComputeTime() > seconds * 1000)
 				return null;
 			
+			// We move to the next if there's no movement to make or if we are out of the map.
 			if (currentMovement == Movement.NONE || !m.contains(nextPoint))
 				continue;
 			
-			if (nextPoint.equals(startPoint) && currentMovement.inverse().equals(startMovement)) {
-				
-				// If we're required to print each result then we send it.
-				// We compare here in order to avoid making a
-				// rebuildMovements on each result.
-				
+			
+			// Cut condition.
+			if (nextPoint.equals(startPoint) && currentMovement.inverse().equals(startMovement)) {				
 				bestStack = rebuildMovements(current);
 				if (listener.action == PrintAction.RESULT)
 					listener.addAll(bestStack, listener.action);
-				
 				listener.addAll(bestStack, PrintAction.BEST_SO_FAR);
 				bestC = current.length;
 				return bestStack;
 			}
 			
+			// We check if we already have something here...
 			Cell hist = current.historyPoints(nextPoint);
 			if (hist == Cell.CROSS) {
+				// If we have a cross then we step over it...
 				PDCellNode l = PDCellNode.fromCell(current, Cell.CROSS);
 				l.countMap.incrementPiecesLeft(Cell.CROSS);
 				setElement(l.distTostart(), l);
 				heap.add(l.distTostart());
 			} else {
 				if (m.get(nextPoint) == Cell.EMPTY && hist == null) {
+					// If it's a valid position we find the matching cells.
 					int[] moves = current.cell.getCompatibles(currentMovement);
 					for (int j = 0; j < moves.length; j++) {
 						int i = moves[j];
+						// We check if we can put the cross or not.
 						if (current.countMap.totalPiecesLeft(i) > 0
 								&& (i != 6 || ((current.countMap.totalPiecesLeft(Cell.UPDOWN.ordinal()) == 0 && (currentMovement == Movement.UP || currentMovement == Movement.DOWN))
 										|| (current.countMap.totalPiecesLeft(Cell.LEFTRIGHT.ordinal()) == 0 && (currentMovement == Movement.LEFT || currentMovement == Movement.RIGHT)) || valid(
@@ -165,9 +181,9 @@ public class PDHeuristicSolution {
 	public Stack<Cell> explore(long miliseconds) {
 		long start = System.currentTimeMillis();
 		
+		// Same as aStar
 		while (!heap.isEmpty()) {
 			listener.addIteration();
-			
 			PDCellNode current = getElement(heap.peek());
 			if (current == null)
 				continue;
@@ -181,22 +197,24 @@ public class PDHeuristicSolution {
 			if (currentMovement == Movement.NONE || !m.contains(nextPoint))
 				continue;
 			
-			if (nextPoint.equals(startPoint) && currentMovement.inverse().equals(startMovement)) {
-				
-				// If we're required to print each result then we send it.
-				// We compare here in order to avoid making a
-				// rebuildMovements on each result.
+			if (nextPoint.equals(startPoint) && currentMovement.inverse().equals(startMovement)) {	
 				if (listener.action == PrintAction.PROGRESS)
 					listener.addAll(rebuildMovements(current), listener.action);
 				
 				if (current.length > bestC) {
-					
+					// If we have a better solution then we save it. It's a local solution!
 					bestStack = rebuildMovements(current);
 					listener.addAll(bestStack, PrintAction.BEST_SO_FAR);
 					bestC = current.length;
+					if (current.length == m.maxPathLen) {
+						// Cut condition.
+						PDApproximateSolver.solved = true;
+						return bestStack;
+					}
 				}
 			}
 			
+			// Same as aStar
 			Cell hist = current.historyPoints(nextPoint);
 			if (hist == Cell.CROSS) {
 				PDCellNode l = PDCellNode.fromCell(current, Cell.CROSS);
@@ -223,6 +241,7 @@ public class PDHeuristicSolution {
 		return bestStack;
 	}
 	
+	// Builds a return stack.
 	private Stack<Cell> rebuildMovements(PDCellNode mov) {
 		Stack<Cell> cell = new Stack<Cell>();
 		PDMatrix mat = m.clone();
@@ -248,6 +267,9 @@ public class PDHeuristicSolution {
 		if (p == null)
 			return true;
 		
+		// Here we do the same as the exact solver, but harder
+		// Since we don't have a current matrix of anything, we have to explore
+		// Our current path given by the cellnode.
 		int cnt = 4;
 		PDCellNode c = location;
 		Stack<Point> explored = new Stack<Point>();
@@ -267,7 +289,8 @@ public class PDHeuristicSolution {
 		Movement[] movs = new Movement[] { Movement.UP, Movement.DOWN, Movement.LEFT, Movement.RIGHT };
 		
 		for (int i = 0; i < movs.length; i++) {
-			if (m.get(p.translate(movs[i].versor())) != Cell.EMPTY && m.get(p.translate(movs[i].versor())) != null
+			if (m.get(p.translate(movs[i].versor())) != Cell.EMPTY 
+					&& m.get(p.translate(movs[i].versor())) != null
 					&& m.get(p.translate(movs[i].versor())) != Cell.START)
 				return false;
 		}

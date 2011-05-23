@@ -4,8 +4,8 @@ import pd.utils.Cell;
 
 public class CellCountMap implements Cloneable {
 	private int[] counts;
-	private char totalCount = 0;
-	public char cellCount = 0;
+	private int totalCount = 0;
+	public int cellCount = 0;
 	
 	public CellCountMap() {
 		counts = new int[7];

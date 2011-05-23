@@ -5,14 +5,32 @@ import pd.utils.Cell;
 import pd.utils.Movement;
 import pd.utils.Point;
 
+/**
+ * Our heuristic solution differs a lot from the exact solution in the way 
+ * it calculates the path.
+ * PDCellNode is a key class in the heuristic solution.
+ * A valid path should always start with a CellNode which is in the startPoint.
+ * CellNodes form an inverse tree in which the root is the point from which the Heuristic starts.
+ */
 public class PDCellNode implements Comparable<PDCellNode> {
+	// Parent of the CellNode, if it's null, then the CellNode is a start point.
 	public PDCellNode	parent;
+	// Cell (piece) contained in the path.
 	public Cell			cell;
+	// Location in the map.
 	public Point		location;
+	// Movement it contains.
 	public Movement		movement;
+	// Amount of cells available for the given cell.
 	public CellCountMap	countMap;
-	public char			length;
+	// Length of the current path.
+	public int			length;
 	
+	/**
+	 * Default comparator, 
+	 * Compares the distance to the start point with another node.
+	 * Used by the aStar algorithm at the beggining.
+	 */
 	@Override
 	public int compareTo(PDCellNode p) {
 		return distanceFromPoints(this.location,
@@ -21,6 +39,9 @@ public class PDCellNode implements Comparable<PDCellNode> {
 						PDApproximateSolver.m.getStartPoint().translate(Cell.startDirection.versor()));
 	}
 	
+	/*
+	 * The same.
+	 */
 	public int distTostart() {
 		return distanceFromPoints(this.location,
 				PDApproximateSolver.m.getStartPoint().translate(Cell.startDirection.versor()));
@@ -30,6 +51,11 @@ public class PDCellNode implements Comparable<PDCellNode> {
 		return (int) Math.sqrt((p.x - p2.x) * (p.x - p2.x) + (p.y - p2.y) * (p.y - p2.y));
 	}
 	
+	/*
+	 * Returns, if exists, the cell in the path on the point given.
+	 * We'd wish we could make this faster, it would improve things a bit.
+	 * It's O(m) where m is the length of the path, it might not be good...
+	 */
 	public Cell historyPoints(Point p) {
 		PDCellNode c = this;
 		while (c != null) {
@@ -43,6 +69,7 @@ public class PDCellNode implements Comparable<PDCellNode> {
 	private PDCellNode() {
 	}
 	
+	// For the start.
 	public PDCellNode(Point start, Movement startDirection, CellCountMap map, Cell node) {
 		location = start;
 		movement = startDirection;
@@ -51,6 +78,7 @@ public class PDCellNode implements Comparable<PDCellNode> {
 		this.countMap = map.clone();
 	}
 	
+	// Builds a new cell by just giving it a node. It makes algoritms simplier.
 	public static PDCellNode fromCell(PDCellNode parent, Cell node) {
 		PDCellNode n = new PDCellNode();
 		n.parent = parent;
@@ -59,7 +87,6 @@ public class PDCellNode implements Comparable<PDCellNode> {
 		n.location = parent.location.translate(parent.movement.versor());
 		n.movement = node.NextDir(parent.movement);
 		n.countMap = parent.countMap.clone();
-		
 		n.countMap.decreasePiecesLeft(node);
 		
 		return n;
