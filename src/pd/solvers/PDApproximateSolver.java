@@ -107,7 +107,7 @@ public class PDApproximateSolver {
 		
 		// We first make a fast aStar algorithm to find greedy solutions.
 		for (PDHeuristicSolution solvePath : solvePaths) {
-			Stack<Cell> stck = solvePath.aStar();
+			Stack<Cell> stck = solvePath.randStar();
 			if (stck != null) {
 				if (solvePath.bestC > solSize) {
 					solSize = solvePath.bestC;
@@ -157,9 +157,9 @@ public class PDApproximateSolver {
 			for (PDHeuristicSolution solvePath : secondaryPaths) {
 				if (target == i) {
 					if (solvePath.bestStack != null) {
-						Stack<Cell> stck = solvePath.explore((seconds * 25) / validPaths + 10);
+						Stack<Cell> stck = solvePath.explore((seconds * 100) / validPaths + 10);
 						if (stck != null) {
-							if (solvePath.bestC > solSize) {
+							if (solvePath.bestC >= solSize) {
 								solSize = solvePath.bestC;
 								bestSolution = stck;
 								listener.setBestLength(solSize + 1);

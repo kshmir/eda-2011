@@ -3,6 +3,7 @@ package pd.solvers;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.Random;
 import java.util.Stack;
 
 import pd.PDMatrix;
@@ -17,15 +18,18 @@ import front.PrintAction;
  */
 public class PDHeuristicSolution {
 	
-	// Heap storing the distances (or the length of the path) for each stack of nodes.
+	// Heap storing the distances (or the length of the path) for each stack of
+	// nodes.
 	public PriorityQueue<Integer>		heap	= new PriorityQueue<Integer>(11, new Comparator<Integer>() {
 													@Override
 													public int compare(Integer o1, Integer o2) {
 														return (int) ((o1 - o2));
 													}
 												});
-	// We use an arraylist of stacks to store the elements, since there might be lots of repeated elements.
-	// By doing this we achieved a nice boost of about 30% speed. Since the access to the heap was a lot faster!
+	// We use an arraylist of stacks to store the elements, since there might be
+	// lots of repeated elements.
+	// By doing this we achieved a nice boost of about 30% speed. Since the
+	// access to the heap was a lot faster!
 	public ArrayList<Stack<PDCellNode>>	stacks	= new ArrayList<Stack<PDCellNode>>(100);
 	
 	// Sets an element in the array/heap.
@@ -39,7 +43,7 @@ public class PDHeuristicSolution {
 		
 		stacks.get(d).push(cell);
 	}
-
+	
 	// Gets an element in the array/heap.
 	private PDCellNode getElement(Integer d) {
 		if (d < 0)
@@ -109,7 +113,7 @@ public class PDHeuristicSolution {
 		this.seconds = seconds;
 	}
 	
-	public Stack<Cell> aStar() {
+	public Stack<Cell> randStar() {
 		long startTime = System.currentTimeMillis();
 		// Add the possible movements to the heap.
 		for (int i : solveMovement.getCompatible()) {
@@ -119,6 +123,8 @@ public class PDHeuristicSolution {
 			setElement(l.distTostart(), l);
 			heap.add(l.distTostart());
 		}
+		
+		Random r = new Random();
 		// It empties if no path's found.
 		while (!heap.isEmpty()) {
 			listener.addIteration();
@@ -132,16 +138,15 @@ public class PDHeuristicSolution {
 			if (System.currentTimeMillis() - startTime > 10 || listener.getTotalComputeTime() > seconds * 1000)
 				return null;
 			
-			// We move to the next if there's no movement to make or if we are out of the map.
+			// We move to the next if there's no movement to make or if we are
+			// out of the map.
 			if (currentMovement == Movement.NONE || !m.contains(nextPoint))
 				continue;
 			
-			
 			// Cut condition.
-			if (nextPoint.equals(startPoint) && currentMovement.inverse().equals(startMovement)) {				
+			if (nextPoint.equals(startPoint) && currentMovement.inverse().equals(startMovement)) {
 				bestStack = rebuildMovements(current);
-				if (listener.action == PrintAction.RESULT)
-					listener.addAll(bestStack, listener.action);
+				listener.addAll(bestStack, listener.action);
 				listener.addAll(bestStack, PrintAction.BEST_SO_FAR);
 				bestC = current.length;
 				return bestStack;
@@ -153,8 +158,9 @@ public class PDHeuristicSolution {
 				// If we have a cross then we step over it...
 				PDCellNode l = PDCellNode.fromCell(current, Cell.CROSS);
 				l.countMap.incrementPiecesLeft(Cell.CROSS);
-				setElement(l.distTostart(), l);
-				heap.add(l.distTostart());
+				int dist = r.nextInt((l.distTostart() * 10 + 1));
+				setElement(dist, l);
+				heap.add(dist);
 			} else {
 				if (m.get(nextPoint) == Cell.EMPTY && hist == null) {
 					// If it's a valid position we find the matching cells.
@@ -167,8 +173,9 @@ public class PDHeuristicSolution {
 										|| (current.countMap.totalPiecesLeft(Cell.LEFTRIGHT.ordinal()) == 0 && (currentMovement == Movement.LEFT || currentMovement == Movement.RIGHT)) || valid(
 										nextPoint, current)))) {
 							PDCellNode l = PDCellNode.fromCell(current, Cell.cells[i]);
-							setElement(l.distTostart(), l);
-							heap.add(l.distTostart());
+							int dist = r.nextInt(l.distTostart() * 10 + 1);
+							setElement(dist, l);
+							heap.add(dist);
 						}
 					}
 					
@@ -197,12 +204,13 @@ public class PDHeuristicSolution {
 			if (currentMovement == Movement.NONE || !m.contains(nextPoint))
 				continue;
 			
-			if (nextPoint.equals(startPoint) && currentMovement.inverse().equals(startMovement)) {	
+			if (nextPoint.equals(startPoint) && currentMovement.inverse().equals(startMovement)) {
 				if (listener.action == PrintAction.PROGRESS)
 					listener.addAll(rebuildMovements(current), listener.action);
 				
 				if (current.length > bestC) {
-					// If we have a better solution then we save it. It's a local solution!
+					// If we have a better solution then we save it. It's a
+					// local solution!
 					bestStack = rebuildMovements(current);
 					listener.addAll(bestStack, PrintAction.BEST_SO_FAR);
 					bestC = current.length;
@@ -289,8 +297,7 @@ public class PDHeuristicSolution {
 		Movement[] movs = new Movement[] { Movement.UP, Movement.DOWN, Movement.LEFT, Movement.RIGHT };
 		
 		for (int i = 0; i < movs.length; i++) {
-			if (m.get(p.translate(movs[i].versor())) != Cell.EMPTY 
-					&& m.get(p.translate(movs[i].versor())) != null
+			if (m.get(p.translate(movs[i].versor())) != Cell.EMPTY && m.get(p.translate(movs[i].versor())) != null
 					&& m.get(p.translate(movs[i].versor())) != Cell.START)
 				return false;
 		}
