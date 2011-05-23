@@ -200,6 +200,8 @@ public class PDExactSolver {
 		for (int i = 0; i < valid.length; i++) {
 			if (valid[i] == Cell.EMPTY)
 				c++;
+			if (valid[i] == null)
+				return true;
 		}
 		return c == 3;
 	}

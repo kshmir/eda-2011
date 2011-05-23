@@ -3,12 +3,12 @@ package pd;
 import pd.utils.Cell;
 
 public class CellCountMap implements Cloneable {
-	private char[] counts;
+	private int[] counts;
 	private char totalCount = 0;
 	public char cellCount = 0;
 	
 	public CellCountMap() {
-		counts = new char[7];
+		counts = new int[7];
 	}
 	public int totalPiecesLeft() {
 		return totalCount;
