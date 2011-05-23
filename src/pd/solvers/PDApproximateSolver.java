@@ -14,7 +14,7 @@ import front.EventListener;
 public class PDApproximateSolver {
 	private Stack<Cell>						bestSolution	= new Stack<Cell>();
 	private int								solSize;
-	private ArrayList<HeuristicSolution>	solvePaths		= new ArrayList<HeuristicSolution>();
+	private ArrayList<PDHeuristicSolution>	solvePaths		= new ArrayList<PDHeuristicSolution>();
 	public static PDMatrix					m;
 	private EventListener					listener;
 	private int								seconds;
@@ -25,18 +25,18 @@ public class PDApproximateSolver {
 				Point p = new Point(i, j);
 				if (m.get(p) == Cell.EMPTY) {
 					if (i == 0) {
-						solvePaths.add(new HeuristicSolution(m.getStartPoint(), p, Cell.startDirection, Movement.RIGHT,
+						solvePaths.add(new PDHeuristicSolution(m.getStartPoint(), p, Cell.startDirection, Movement.RIGHT,
 								m, listener, seconds));
 					} else if (i == m.getCols() - 1) {
-						solvePaths.add(new HeuristicSolution(m.getStartPoint(), p, Cell.startDirection, Movement.LEFT,
+						solvePaths.add(new PDHeuristicSolution(m.getStartPoint(), p, Cell.startDirection, Movement.LEFT,
 								m, listener, seconds));
 					}
 					
 					if (j == 0) {
-						solvePaths.add(new HeuristicSolution(m.getStartPoint(), p, Cell.startDirection, Movement.DOWN,
+						solvePaths.add(new PDHeuristicSolution(m.getStartPoint(), p, Cell.startDirection, Movement.DOWN,
 								m, listener, seconds));
 					} else if (j == m.getRows() - 1) {
-						solvePaths.add(new HeuristicSolution(m.getStartPoint(), p, Cell.startDirection, Movement.UP, m,
+						solvePaths.add(new PDHeuristicSolution(m.getStartPoint(), p, Cell.startDirection, Movement.UP, m,
 								listener, seconds));
 					}
 				}
@@ -56,20 +56,20 @@ public class PDApproximateSolver {
 		getSolvePaths();
 		int validPaths = 0;
 		
-		TreeSet<HeuristicSolution> secondaryPaths = new TreeSet<HeuristicSolution>(new Comparator<HeuristicSolution>() {
+		TreeSet<PDHeuristicSolution> secondaryPaths = new TreeSet<PDHeuristicSolution>(new Comparator<PDHeuristicSolution>() {
 			@Override
-			public int compare(HeuristicSolution o1, HeuristicSolution o2) {
+			public int compare(PDHeuristicSolution o1, PDHeuristicSolution o2) {
 				return ((o2.bestC - o1.bestC) == 0) ? 1 : (o2.bestC - o1.bestC);
 			}
 		});
 		
-		TreeSet<HeuristicSolution> paths = new TreeSet<HeuristicSolution>(new Comparator<HeuristicSolution>() {
+		TreeSet<PDHeuristicSolution> paths = new TreeSet<PDHeuristicSolution>(new Comparator<PDHeuristicSolution>() {
 			@Override
-			public int compare(HeuristicSolution o1, HeuristicSolution o2) {
+			public int compare(PDHeuristicSolution o1, PDHeuristicSolution o2) {
 				return ((o2.bestC - o1.bestC) == 0) ? 1 : (o2.bestC - o1.bestC);
 			}
 		});
-		for (HeuristicSolution solvePath : solvePaths) {
+		for (PDHeuristicSolution solvePath : solvePaths) {
 			Stack<Cell> stck = solvePath.aStar();
 			if (stck != null) {
 				if (solvePath.bestC > solSize) {
@@ -81,14 +81,14 @@ public class PDApproximateSolver {
 				validPaths++;
 			}
 		}
-		for (HeuristicSolution solvePath : paths) {
+		for (PDHeuristicSolution solvePath : paths) {
 			Stack<Cell> stck = solvePath.aStar();
 			if (stck != null) {
 				solvePath.rebuildHeap();
 			}
 		}
 		while (true) {
-			for (HeuristicSolution solvePath : paths) {
+			for (PDHeuristicSolution solvePath : paths) {
 				if (solvePath.bestStack != null) {
 					Stack<Cell> stck = solvePath.explore((seconds * 50) / validPaths);
 					if (stck != null) {
@@ -101,10 +101,10 @@ public class PDApproximateSolver {
 				}
 			}
 			
-			TreeSet<HeuristicSolution> pathsRebuilder = new TreeSet<HeuristicSolution>(
-					new Comparator<HeuristicSolution>() {
+			TreeSet<PDHeuristicSolution> pathsRebuilder = new TreeSet<PDHeuristicSolution>(
+					new Comparator<PDHeuristicSolution>() {
 						@Override
-						public int compare(HeuristicSolution o1, HeuristicSolution o2) {
+						public int compare(PDHeuristicSolution o1, PDHeuristicSolution o2) {
 							return ((o2.bestC - o1.bestC) == 0) ? 1 : (o2.bestC - o1.bestC);
 						}
 					});
@@ -117,7 +117,7 @@ public class PDApproximateSolver {
 			}
 			
 			while (paths.size() > 0) {
-				HeuristicSolution p = paths.pollFirst();
+				PDHeuristicSolution p = paths.pollFirst();
 				if (p.heap.size() > 0)
 					pathsRebuilder.add(p);
 				else if (secondaryPaths.size() > 0)
