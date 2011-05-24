@@ -66,6 +66,40 @@ public class PDCellNode implements Comparable<PDCellNode> {
 		return null;
 	}
 	
+	public Cell historyPoints(Point p, PDCellNode startNode, PDCellNode next, Point startPoint) {
+		PDCellNode c = this;
+		while (c != null) {
+			if (c.location.equals(p))
+				return c.cell;
+			c = c.parent;
+		}
+		c = next;
+		while (c != null) {
+			if (c.location.equals(p))
+				return c.cell;
+			c = c.parent;
+		}
+		c = startNode;
+		while (c != null && c.location != startPoint) {
+			if (c.location.equals(p))
+				return c.cell;
+			c = c.parent;
+		}
+		
+		
+		return null;
+	}
+	
+	public PDCellNode topParent() {
+		PDCellNode c = this;
+		while (c != null) {
+			if (c.parent == null)
+				return c;
+			c = c.parent;
+		}
+		return null;
+	}
+	
 	private PDCellNode() {
 	}
 	
@@ -83,7 +117,7 @@ public class PDCellNode implements Comparable<PDCellNode> {
 		PDCellNode n = new PDCellNode();
 		n.parent = parent;
 		n.cell = node;
-		n.length = (char) (parent.length + 1);
+		n.length = (parent.length + 1);
 		n.location = parent.location.translate(parent.movement.versor());
 		n.movement = node.NextDir(parent.movement);
 		n.countMap = parent.countMap.clone();
@@ -103,6 +137,19 @@ public class PDCellNode implements Comparable<PDCellNode> {
 		result = prime * result + ((movement == null) ? 0 : movement.hashCode());
 		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
 		return result;
+	}
+	
+	public PDCellNode clone()
+	{
+		PDCellNode n = new PDCellNode();
+		if (this.parent != null)
+			n.parent = this.parent.clone();
+		n.cell = this.cell;
+		n.length = this.length;
+		n.location = new Point(this.location.x, this.location.y);
+		n.movement = this.movement;
+		n.countMap = this.countMap.clone();
+		return n;
 	}
 	
 	@Override
@@ -136,6 +183,11 @@ public class PDCellNode implements Comparable<PDCellNode> {
 		} else if (!parent.equals(other.parent))
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return cell.toString();
 	}
 	
 }

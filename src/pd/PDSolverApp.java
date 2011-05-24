@@ -43,6 +43,7 @@ public class PDSolverApp {
 		catch (OutOfMemoryError e)
 		{
 			System.out.println("Looks like we ran out of heap space... what a shame!");
+			e.printStackTrace();
 		}
 		catch (Exception e) {
 			System.out.println("If you see this message, then please don't make us recourse");

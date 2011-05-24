@@ -47,7 +47,6 @@ public class CellCountMap implements Cloneable {
 		for (int i = 0; i < this.counts.length; i++) {
 			r.counts[i] = this.counts[i];
 		}
-		r.counts = this.counts.clone();
 		r.totalCount = this.totalCount;
 		r.cellCount = this.cellCount;
 		return r;
