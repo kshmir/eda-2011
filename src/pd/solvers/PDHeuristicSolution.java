@@ -1,11 +1,12 @@
 package pd.solvers;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Stack;
+import java.util.TreeMap;
 
 import pd.CellCountMap;
 import pd.PDMatrix;
@@ -13,7 +14,6 @@ import pd.utils.Cell;
 import pd.utils.Movement;
 import pd.utils.Point;
 import front.EventListener;
-import front.PrintAction;
 
 /**
  * Finds and improves the solution in the given point.
@@ -92,14 +92,16 @@ public class PDHeuristicSolution {
 		this.seconds = seconds;
 	}
 	
-	public Stack<Cell> randStar() {
+	public Solution randStar() {
 		// Add the possible movements to the heap.
 		for (int i : solveMovement.getCompatible()) {
-			PDCellNode l = new PDCellNode(solvePoint, Cell.cells[i].NextDir(solveMovement),
-					m.getCellCountMap().clone(), Cell.cells[i]);
-			l.countMap.decreasePiecesLeft(i);
-			setElement(l.distTostart(), l);
-			heap.add(l.distTostart());
+			if (i != 6) {
+				PDCellNode l = new PDCellNode(solvePoint, Cell.cells[i].NextDir(solveMovement), m.getCellCountMap()
+						.clone(), Cell.cells[i]);
+				l.countMap.decreasePiecesLeft(i);
+				setElement(l.distTostart(), l);
+				heap.add(l.distTostart());
+			}
 		}
 		
 		Random r = new Random();
@@ -123,49 +125,39 @@ public class PDHeuristicSolution {
 			
 			// Cut condition.
 			if (nextPoint.equals(startPoint) && currentMovement.inverse().equals(startMovement)) {
-				bestStack = rebuildMovements(current);
-				listener.addAll(bestStack, PrintAction.BEST_SO_FAR);
-				bestC = current.length;
+				Solution sol = new Solution();
+				sol.path = rebuildMovements(current, sol);
+				sol.startNode = current;
 				endNode = current;
-				return bestStack;
+				return sol;
 			}
 			
 			// We check if we already have something here...
 			Cell hist = current.historyPoints(nextPoint);
-			if (hist == Cell.CROSS) {
-				// If we have a cross then we step over it...
-				PDCellNode l = PDCellNode.fromCell(current, Cell.CROSS);
-				l.countMap.incrementPiecesLeft(Cell.CROSS);
-				int dist = r.nextInt(l.distTostart() * 10 + 1);
-				setElement(dist, l);
-				heap.add(dist);
-			} else {
-				if (m.get(nextPoint) == Cell.EMPTY && hist == null) {
-					// If it's a valid position we find the matching cells.
-					int[] moves = current.cell.getCompatibles(currentMovement);
-					for (int j = 0; j < moves.length; j++) {
-						int i = moves[j];
-						// We check if we can put the cross or not.
-						if (current.countMap.totalPiecesLeft(i) > 0
-								&& (i != 6 || ((current.countMap.totalPiecesLeft(Cell.UPDOWN.ordinal()) == 0 && (currentMovement == Movement.UP || currentMovement == Movement.DOWN))
-										|| (current.countMap.totalPiecesLeft(Cell.LEFTRIGHT.ordinal()) == 0 && (currentMovement == Movement.LEFT || currentMovement == Movement.RIGHT)) || valid(
-										nextPoint, current)))) {
-							PDCellNode l = PDCellNode.fromCell(current, Cell.cells[i]);
-							int dist = r.nextInt(l.distTostart() * 10 + 1);
-							setElement(dist, l);
-							heap.add(dist);
-							
-						}
+			if (m.get(nextPoint) == Cell.EMPTY && hist == null) {
+				// If it's a valid position we find the matching cells.
+				int[] moves = current.cell.getCompatibles(currentMovement);
+				for (int j = 0; j < moves.length; j++) {
+					int i = moves[j];
+					// We check if we can put the cross or not.
+					if (current.countMap.totalPiecesLeft(i) > 0 && i != 6) {
+						PDCellNode l = PDCellNode.fromCell(current, Cell.cells[i]);
+						int dist = r.nextInt(l.distTostart() * 100 + 1) + 100;
+						if (Cell.cells[i] == Cell.LEFTRIGHT || Cell.cells[i] == Cell.UPDOWN)
+							dist = r.nextInt(l.distTostart() * 100 + 1);
+						setElement(dist, l);
+						heap.add(dist);
+						
 					}
-					
 				}
+				
 			}
 		}
-		return bestStack;
+		return null;
 	}
 	
 	private PDCellNode[] improveMe(Point startPoint, Movement startMovement, Point solvePoint, Movement solveMovement,
-			Cell toAvoid, Cell toAvoidEnd, CellCountMap map, PDCellNode startNode, PDCellNode next) {
+			Cell toAvoid, Cell toAvoidEnd, CellCountMap map, PDCellNode startNode, PDCellNode next, Solution sol) {
 		rebuildHeap();
 		for (int i : startMovement.getCompatible()) {
 			if ((toAvoid == null || toAvoid.ordinal() != i) && map.totalPiecesLeft(i) > 0) {
@@ -177,73 +169,67 @@ public class PDHeuristicSolution {
 			}
 		}
 		
-		Random r = new Random();
 		// It empties if no path's found.
 		while (!heap.isEmpty()) {
 			listener.addIteration();
 			PDCellNode current = getElement(heap.peek());
 			
 			
-				
-			// System.out.println("get: " + current + " hpsize:" + heap.size());
 			if (current == null)
 				continue;
 			
-		
-			if (current.length > 10)
+			if (current.length > 6)
 				continue;
 			Movement currentMovement = current.movement;
 			Point nextPoint = currentMovement.applyTo(current.location);
 			
 			// We cut if we take too long or if it's time to leave.
-			/*
-			 * if (listener.getTotalComputeTime() > seconds * 1000) return null;
-			 */
-
+			
+			if (listener.getTotalComputeTime() > seconds * 1000) {
+				return null;
+			}
+			
 			// We move to the next if there's no movement to make or if we are
 			// out of the map.
 			if (currentMovement == Movement.NONE || !m.contains(nextPoint))
 				continue;
 			
-			
 			// Cut condition.
-			if (solvePoint.equals(current.location) && currentMovement.equals(solveMovement)
-					&& current.length > 2 && current.cell != toAvoidEnd) {
-				// bestStack = rebuildMovements(current);
-				// listener.addAll(bestStack, listener.action);
-				// listener.addAll(bestStack, PrintAction.BEST_SO_FAR);
-				
+			if (solvePoint.equals(current.location) && currentMovement.equals(solveMovement) && current.length > 2
+					&& current.cell != toAvoidEnd) {
 				return new PDCellNode[] { current.topParent(), current };
 			}
 			
 			// We check if we already have something here...
-			Cell hist = current.historyPoints(nextPoint, startNode, next, solvePoint);
-			if (hist == Cell.CROSS) {
-				// If we have a cross then we step over it...
-				PDCellNode l = PDCellNode.fromCell(current, Cell.CROSS);
-				l.countMap.incrementPiecesLeft(Cell.CROSS);
-				int dist = PDCellNode.distanceFromPoints(l.location, startPoint);
-				setElement(dist, l);
-				heap.add(dist);
-			} else {
-				if (m.get(nextPoint) == Cell.EMPTY && hist == null) {
-					// If it's a valid position we find the matching cells.
-					int[] moves = current.cell.getCompatibles(currentMovement);
-					for (int j = 0; j < moves.length; j++) {
-						int i = moves[j];
-						// We check if we can put the cross or not.
-						if (current.countMap.totalPiecesLeft(i) > 0
-								&& (i != 6 || ((current.countMap.totalPiecesLeft(Cell.UPDOWN.ordinal()) == 0 && (currentMovement == Movement.UP || currentMovement == Movement.DOWN))
-										|| (current.countMap.totalPiecesLeft(Cell.LEFTRIGHT.ordinal()) == 0 && (currentMovement == Movement.LEFT || currentMovement == Movement.RIGHT)) || validBuilder(
-										nextPoint, current, startNode, next, solvePoint)))) {
-							PDCellNode l = PDCellNode.fromCell(current, Cell.cells[i]);
-							int dist = PDCellNode.distanceFromPoints(l.location, startPoint);
-							setElement(dist, l);
-							heap.add(dist);
-							
+			if (current.length <= 5) {
+				Cell hist = null;
+				if (!nextPoint.equals(startPoint) && !nextPoint.equals(solvePoint))
+					hist = current.historyPoints(nextPoint, sol);
+				else
+					hist = current.historyPoints(nextPoint);
+				if (hist == Cell.CROSS) {
+					// If we have a cross then we step over it...
+					PDCellNode l = PDCellNode.fromCell(current, Cell.CROSS);
+					l.countMap.incrementPiecesLeft(Cell.CROSS);
+					int dist = PDCellNode.distanceFromPoints(l.location, startPoint);
+					setElement(dist, l);
+					heap.add(dist);
+				} else {
+					if (m.get(nextPoint) == Cell.EMPTY && hist == null) {
+						// If it's a valid position we find the matching cells.
+						int[] moves = current.cell.getCompatibles(currentMovement);
+						for (int j = 0; j < moves.length; j++) {
+							int i = moves[j];
+							// We check if we can put the cross or not.
+							if (current.countMap.totalPiecesLeft(i) > 0) {
+								PDCellNode l = PDCellNode.fromCell(current, Cell.cells[i]);
+								int dist = PDCellNode.distanceFromPoints(l.location, startPoint);
+								setElement(dist, l);
+								heap.add(dist);
+							}
 						}
+						
 					}
-					
 				}
 			}
 			
@@ -251,31 +237,18 @@ public class PDHeuristicSolution {
 		return null;
 	}
 	
-	private void printMat(PDCellNode n, PDCellNode startNode, PDCellNode next, Point startPoint) {
-		PDMatrix mat = m.clone();
-		while (n != null) {
-			mat.add(n.location, n.cell);
-			n = n.parent;
-		}
-		while (next != null) {
-			mat.add(next.location, next.cell);
-			next = next.parent;
-		}
-		while (startNode != null && startNode.location != startPoint) {
-			mat.add(startNode.location, startNode.cell);
-			startNode = startNode.parent;
-		}
-		
-		mat.print();
+	public class Solution {
+		public Stack<Cell>		path;
+		public PDCellNode		startNode;
+		public Map<Point, Cell>	cells	= new TreeMap<Point, Cell>(new Comparator<Point>() {
+											@Override
+											public int compare(Point o1, Point o2) {
+												return (o1.x - o2.x == 0) ? o1.y - o2.y : o1.x - o2.x;
+											}
+										});
 	}
 	
-	public class Solution
-	{
-		public Stack<Cell> path;
-		public PDCellNode startNode;
-	}
-	
-	public Solution explore(int len) {
+	public Solution explore(int len, Solution current) {
 		
 		PDCellNode startNode = endNode.clone();
 		CellCountMap map = startNode.countMap;
@@ -298,33 +271,47 @@ public class PDHeuristicSolution {
 			return null;
 		
 		PDCellNode[] ends = improveMe(end.location, next.movement, node.location, node.movement, node.cell, end.cell,
-				map.clone(), startNode, next);
+				map, startNode, next, current);
 		
 		if (ends == null) {
 			return null;
 		}
 		
-
-		
 		prev.parent = ends[1];
 		ends[0].parent = next;
 		startNode.countMap = ends[1].countMap.clone();
-
+		
 		Solution sol = new Solution();
-		sol.path = rebuildMovements(startNode);
+		sol.path = rebuildMovements(startNode, sol);
 		sol.startNode = startNode;
 		
 		return sol;
 	}
 	
 	// Builds a return stack.
-	private Stack<Cell> rebuildMovements(PDCellNode mov) {
+	private Stack<Cell> rebuildMovements(PDCellNode mov, Solution s) {
 		Stack<Cell> cell = new Stack<Cell>();
-		PDMatrix mat = m.clone();
 		PDCellNode p = mov;
 		do {
 			Cell c = p.cell;
-			mat.add(p.location, c);
+			cell.add(c);
+			s.cells.put(p.location, c);
+			p = p.parent;
+		} while (p != null);
+		Stack<Cell> ret = new Stack<Cell>();
+		while (!cell.isEmpty()) {
+			ret.push(cell.pop());
+		}
+		ret.add(Cell.START);
+		return ret;
+	}
+	
+	// Builds a return stack.
+	private Stack<Cell> rebuildMovements(PDCellNode mov) {
+		Stack<Cell> cell = new Stack<Cell>();
+		PDCellNode p = mov;
+		do {
+			Cell c = p.cell;
 			cell.add(c);
 			p = p.parent;
 		} while (p != null);

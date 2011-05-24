@@ -107,33 +107,36 @@ public class PDApproximateSolver {
 		
 		while (true) {
 			for (PDHeuristicSolution solvePath : solvePaths) {
-				Stack<Cell> stck = null;
-				stck = solvePath.randStar();
-				solvePath.bestStack = stck;
+				Solution sol = null;
+				sol = solvePath.randStar();
 				solvePath.rebuildHeap();
-				if (stck != null) {
-					int len = stck.size();
-					Solution max = null;
+				if (sol != null) {
+					int len = sol.path.size();
+					Solution max = sol;
 					
 					do {
+						sol = max;
 						max = null;
 						for (int j = 1; j < len - 3; j++) {
-							Solution s = solvePath.explore(j);
+							Solution s = solvePath.explore(j,sol);
 							if (s != null) {
 								if (max == null || s.path.size() > max.path.size()) {
 									if (s.path.size() > solSize) {
 										solSize = s.path.size();
 										bestSolution = s.path;
+										listener.setBestLength(solSize);
 									}
 									solvePath.bestStack = s.path;
 									max = s;
-									listener.setBestLength(solSize + 1);
-									// listener.addAll(s.path, listener.action);
+									
 								}
 							}
 						}
 						if (max != null)
+						{
 							solvePath.endNode = max.startNode;
+							len = max.path.size();
+						}
 					} while (max != null);
 					
 				}

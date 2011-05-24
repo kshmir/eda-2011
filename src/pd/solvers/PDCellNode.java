@@ -1,16 +1,17 @@
 package pd.solvers;
 
 import pd.CellCountMap;
+import pd.solvers.PDHeuristicSolution.Solution;
 import pd.utils.Cell;
 import pd.utils.Movement;
 import pd.utils.Point;
 
 /**
- * Our heuristic solution differs a lot from the exact solution in the way 
- * it calculates the path.
- * PDCellNode is a key class in the heuristic solution.
- * A valid path should always start with a CellNode which is in the startPoint.
- * CellNodes form an inverse tree in which the root is the point from which the Heuristic starts.
+ * Our heuristic solution differs a lot from the exact solution in the way it
+ * calculates the path. PDCellNode is a key class in the heuristic solution. A
+ * valid path should always start with a CellNode which is in the startPoint.
+ * CellNodes form an inverse tree in which the root is the point from which the
+ * Heuristic starts.
  */
 public class PDCellNode implements Comparable<PDCellNode> {
 	// Parent of the CellNode, if it's null, then the CellNode is a start point.
@@ -27,9 +28,8 @@ public class PDCellNode implements Comparable<PDCellNode> {
 	public int			length;
 	
 	/**
-	 * Default comparator, 
-	 * Compares the distance to the start point with another node.
-	 * Used by the aStar algorithm at the beggining.
+	 * Default comparator, Compares the distance to the start point with another
+	 * node. Used by the aStar algorithm at the beggining.
 	 */
 	@Override
 	public int compareTo(PDCellNode p) {
@@ -52,9 +52,9 @@ public class PDCellNode implements Comparable<PDCellNode> {
 	}
 	
 	/*
-	 * Returns, if exists, the cell in the path on the point given.
-	 * We'd wish we could make this faster, it would improve things a bit.
-	 * It's O(m) where m is the length of the path, it might not be good...
+	 * Returns, if exists, the cell in the path on the point given. We'd wish we
+	 * could make this faster, it would improve things a bit. It's O(m) where m
+	 * is the length of the path, it might not be good...
 	 */
 	public Cell historyPoints(Point p) {
 		PDCellNode c = this;
@@ -66,27 +66,16 @@ public class PDCellNode implements Comparable<PDCellNode> {
 		return null;
 	}
 	
-	public Cell historyPoints(Point p, PDCellNode startNode, PDCellNode next, Point startPoint) {
+	public Cell historyPoints(Point p, Solution s) {
 		PDCellNode c = this;
+		Cell cll;
+		if ((cll = s.cells.get(p)) != null)
+			return cll;
 		while (c != null) {
 			if (c.location.equals(p))
 				return c.cell;
 			c = c.parent;
 		}
-		c = next;
-		while (c != null) {
-			if (c.location.equals(p))
-				return c.cell;
-			c = c.parent;
-		}
-		c = startNode;
-		while (c != null && c.location != startPoint) {
-			if (c.location.equals(p))
-				return c.cell;
-			c = c.parent;
-		}
-		
-		
 		return null;
 	}
 	
@@ -139,8 +128,7 @@ public class PDCellNode implements Comparable<PDCellNode> {
 		return result;
 	}
 	
-	public PDCellNode clone()
-	{
+	public PDCellNode clone() {
 		PDCellNode n = new PDCellNode();
 		if (this.parent != null)
 			n.parent = this.parent.clone();
