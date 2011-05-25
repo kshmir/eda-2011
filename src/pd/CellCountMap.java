@@ -2,6 +2,7 @@ package pd;
 
 import pd.utils.Cell;
 
+// Helps us to know how many pieces we have in the map available.
 public class CellCountMap implements Cloneable {
 	private int[] counts;
 	private int totalCount = 0;

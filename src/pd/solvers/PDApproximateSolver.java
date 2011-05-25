@@ -1,7 +1,5 @@
 package pd.solvers;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Stack;
 import java.util.TreeSet;
 
@@ -11,6 +9,7 @@ import pd.utils.Cell;
 import pd.utils.Movement;
 import pd.utils.Point;
 import front.EventListener;
+import front.PrintAction;
 
 /**
  * Class which handles the approximate solutions of the problem.
@@ -30,8 +29,15 @@ public class PDApproximateSolver {
 	/*
 	 * Contains all the possible paths to explore.
 	 */
-	private ArrayList<PDHeuristicSolution>	solvePaths		= new ArrayList<PDHeuristicSolution>();
+	private TreeSet<PDHeuristicSolution>	solvePaths		= new TreeSet<PDHeuristicSolution>();
+	/*
+	 * Global instance of the matrix, this doesn't avoid Threading but helps out
+	 * to reduce some memory.
+	 */
 	public static PDMatrix					m;
+	/*
+	 * Helps cutting the solver.
+	 */
 	public static boolean					solved			= false;
 	/*
 	 * Contains the callbacks to the frontend.
@@ -78,77 +84,80 @@ public class PDApproximateSolver {
 		this.listener = i;
 	}
 	
+	// Hill Climbing solution.
 	public Stack<Cell> solve() {
 		// Starts up the listener and finds solvable points.
 		listener.setStart();
 		// Builds instances of solutions
 		buildSolvePaths();
-		// Used to validate the paths to use.
-		int validPaths = 0;
 		
-		// SecondaryPaths stores the solutions being discarted for the moment.
-		// And is randomly checked in order to get out of local maximums.
-		TreeSet<PDHeuristicSolution> secondaryPaths = new TreeSet<PDHeuristicSolution>(
-				new Comparator<PDHeuristicSolution>() {
-					@Override
-					public int compare(PDHeuristicSolution o1, PDHeuristicSolution o2) {
-						return ((o2.bestC - o1.bestC) == 0) ? 1 : (o2.bestC - o1.bestC);
-					}
-				});
-		// Paths stores the paths currently being explored, it starts with all
-		// the paths
-		// but end ups with just 2 paths being explored constantly.
-		TreeSet<PDHeuristicSolution> paths = new TreeSet<PDHeuristicSolution>(new Comparator<PDHeuristicSolution>() {
-			@Override
-			public int compare(PDHeuristicSolution o1, PDHeuristicSolution o2) {
-				return ((o2.bestC - o1.bestC) == 0) ? 1 : (o2.bestC - o1.bestC);
-			}
-		});
 		
 		while (true) {
+			// We explore for each point a new fast random path.
 			for (PDHeuristicSolution solvePath : solvePaths) {
 				Solution sol = null;
+				// Fast random explore
 				sol = solvePath.randStar();
+				// Rebuild heap
 				solvePath.rebuildHeap();
+				// If there's a solution we try to expand it.
 				if (sol != null) {
+					if (sol.path.size() > solSize) {
+						solSize = sol.path.size();
+						bestSolution = sol.path;
+						listener.setBestLength(solSize);
+						// Listeners
+						listener.addAll(sol.path, PrintAction.PROGRESS);
+						listener.addAll(sol.path, PrintAction.RESULT);
+					}
 					int len = sol.path.size();
 					Solution max = sol;
-					
 					do {
 						sol = max;
 						max = null;
 						for (int j = 1; j < len - 3; j++) {
-							Solution s = solvePath.explore(j,sol);
+							// We explore a better solution.
+							Solution s = solvePath.explore(j, sol);
 							if (s != null) {
+								// Listeners
+								listener.addAll(s.path, PrintAction.PROGRESS);
 								if (max == null || s.path.size() > max.path.size()) {
 									if (s.path.size() > solSize) {
 										solSize = s.path.size();
 										bestSolution = s.path;
 										listener.setBestLength(solSize);
+										// Listeners
+										listener.addAll(s.path, PrintAction.BEST_SO_FAR);
 									}
-									solvePath.bestStack = s.path;
+									else if (s.path.size() == solSize)
+									{
+										if (listener.repeats)
+											listener.addAll(s.path, PrintAction.BEST_SO_FAR);
+									}
+									// Listeners
+									listener.addAll(s.path, PrintAction.RESULT);
 									max = s;
-									
 								}
 							}
 						}
-						if (max != null)
-						{
+						if (max != null) {
 							solvePath.endNode = max.startNode;
 							len = max.path.size();
 						}
+						// The cut is a local maximum.
 					} while (max != null);
 					
 				}
 				
 			}
 			
-			if (listener.getTotalComputeTime() > seconds * 1000 || solved)
+			// The algorithm ends when solved
+			if (listener.getTotalComputeTime() > seconds * 1000)
 				break;
 		}
 		
 		listener.setEnd();
-		listener.setBestLength(solSize + 1);
+		listener.setBestLength(solSize);
 		return bestSolution;
 	}
 }
