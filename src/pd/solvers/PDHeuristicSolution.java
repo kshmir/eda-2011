@@ -245,7 +245,7 @@ public class PDHeuristicSolution implements Comparable<PDHeuristicSolution> {
 						// If it's a valid position we find the matching cells.
 						int[] moves = current.cell.getCompatibles(currentMovement);
 						for (int j = 0; j < moves.length; j++) {
-							int i = moves[moves.length - j - 1];
+							int i = moves[j];
 							// We check if we can put the piece or not.
 							if (current.countMap.totalPiecesLeft(i) > 0) {
 								PDCellNode l = PDCellNode.fromCell(current, Cell.cells[i]);
