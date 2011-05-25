@@ -21,11 +21,7 @@ public class ConsoleListener extends EventListener {
 		start_mat = mat.clone();
 		this.mat = mat.clone();
 		this.original_mat = mat;
-		try {
-			System.setOut(new PrintStream(System.out, true, "utf-8"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		
 	}
 
 	@Override

@@ -28,11 +28,9 @@ public class PDSolverApp {
 			System.out.println(invalidParamsString);
 		} catch (IOException e) {
 			System.out.println("Couldn't read input file!");
-		} catch(EmptyStackException e)
-		{
+		} catch (EmptyStackException e) {
 			System.out.println("We couldn't even find a path to solve!");
-		}
-		catch (InvalidFileException e) {
+		} catch (InvalidFileException e) {
 			System.out.println("Invalid file detected!");
 			System.out.println("Make sure the amount of values given is valid");
 			System.out.println("And also make sure that the height of the map is valid");
@@ -59,13 +57,15 @@ public class PDSolverApp {
 	private static EventListener getPrintInterface(String[] args, PDMatrix mat, PrintAction action) {
 		EventListener el = null;
 		if (args[args.length - 1].startsWith("-") && args[args.length - 1].contains("p")
-				&& args[args.length - 1].contains("c"))
+				&& args[args.length - 1].contains("c")) {
+			System.out.println("Remember your console must support UTF8 for the console view to work!");
 			el = new MultipleListener(action, mat, args[args.length - 1].contains("k"),
 					args[args.length - 1].contains("r") && args[args.length - 1].startsWith("-"));
-		else if (args[args.length - 1].startsWith("-") && args[args.length - 1].contains("c"))
+		} else if (args[args.length - 1].startsWith("-") && args[args.length - 1].contains("c")) {
+			System.out.println("Remember your console must support UTF8 for the console view to work!");
 			el = new ConsoleListener(action, mat, args[args.length - 1].contains("k"),
 					args[args.length - 1].contains("r") && args[args.length - 1].startsWith("-"));
-		else
+		} else
 			el = new PanelListener(action, mat, args[args.length - 1].contains("k"),
 					args[args.length - 1].contains("r") && args[args.length - 1].startsWith("-"));
 		return el;
@@ -158,8 +158,7 @@ public class PDSolverApp {
 																	+ "map approx 1 betterresult\n\t\t"
 																	+ "Shows each best result found so far on the panel.\n\t"
 																	+ "map approx 1 bestresult\n\t\t"
-																	+ "Shows THE best result found on the panel.\n\t"
-																	;
+																	+ "Shows THE best result found on the panel.\n\t";
 	
 	public static PrintAction	action;
 }
