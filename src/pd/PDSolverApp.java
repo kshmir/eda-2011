@@ -151,13 +151,13 @@ public class PDSolverApp {
 																	+ "Shows THE best result found on the panel.\n\t"
 																	+ "map approx 10 progress -cpk\n\t\t"
 																	+ "Shows each iteration on the panel and the console, stepping by keyboard. Maximum time: 10 minutes\n\t"
-																	+ "map exact progress -c\n\t\t"
+																	+ "map approx 1 progress -c\n\t\t"
 																	+ "Shows each iteration on the console, stepping by 100ms step.\n\t"
-																	+ "map exact eachresult\n\t\t"
+																	+ "map approx 1 eachresult\n\t\t"
 																	+ "Shows each result found on the panel.\n\t"
-																	+ "map exact betterresult\n\t\t"
+																	+ "map approx 1 betterresult\n\t\t"
 																	+ "Shows each best result found so far on the panel.\n\t"
-																	+ "map exact bestresult\n\t\t"
+																	+ "map approx 1 bestresult\n\t\t"
 																	+ "Shows THE best result found on the panel.\n\t"
 																	;
 	
